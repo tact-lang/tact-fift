@@ -1,0 +1,5 @@
+PROGRAM{
+  DECLPROC main
+  main PROC:<{
+  }>
+}END>c

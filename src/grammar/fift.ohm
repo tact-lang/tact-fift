@@ -1,0 +1,26 @@
+Fift {
+    // Starting point of the program
+    Program = "PROGRAM{" "}"
+    FunctionDeclaration = "DECLPROC" id
+    FunctionImplementation = id "PROC:<{" "}>"
+    
+    // Body
+
+    // Letters
+    letterAsciiLC = "a".."z"
+    letterAsciiUC = "A".."Z"
+    letterAscii = letterAsciiLC | letterAsciiUC
+    letterComment = letterAsciiLC | letterAsciiUC | digit | "_"
+
+    // ID
+    idStart = letterAscii | "_"
+    idPart = letterAscii | digit | "_"
+    id = #idStart #(idPart*)
+
+    // Comments
+    space += comment | lineTerminator
+    comment = multiLineComment | singleLineComment
+    lineTerminator = "\n" | "\r" | "\u2028" | "\u2029"
+    multiLineComment = "/*" (~"*/" any)* "*/"
+    singleLineComment = "//" (~lineTerminator any)*
+}
