@@ -1,3 +1,11 @@
 () main() impure {
     
 }
+
+int test(int a, int b) inline_ref {
+    return a + b * 10000000000 + 10;
+}
+
+slice method() {
+    return "Hello World asdasd asdas d asda sdask dhjasjkl hdkjas hdkj has kdj has";
+}

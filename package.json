@@ -6,9 +6,10 @@
   "author": "Steve Korshakov <steve@korshakov.com>",
   "license": "MIT",
   "scripts": {
-    "gen:grammar": "ohm generateBundles --withTypes src/grammar/*.ohm",
+    "gen:opcodes": "ts-node ./scripts/opcodes.ts",
+    "gen:grammar": "ohm generateBundles --withTypes src/grammar/fift.ohm",
     "gen:func": "ts-node ./scripts/compiler.ts",
-    "gen": "yarn gen:grammar && yarn gen:func",
+    "gen": "yarn gen:opcodes && yarn gen:grammar && yarn gen:func",
     "build": "tsc --declaration",
     "test": "jest",
     "clean": "rm -fr dist",

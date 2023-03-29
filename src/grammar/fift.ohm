@@ -1,10 +1,113 @@
 Fift {
     // Starting point of the program
-    Program = "PROGRAM{" "}"
+    Program = "PROGRAM{" ProgramItem* "}END>c"
+    ProgramItem = FunctionDeclaration | FunctionImplementation
     FunctionDeclaration = "DECLPROC" id
-    FunctionImplementation = id "PROC:<{" "}>"
+    FunctionImplementation = id ("PROCREF"|"PROC") ":<{" Opcode* "}>"
     
-    // Body
+    // Opcodes
+    Opcode = "NOP" -- op_NOP
+           | "SWAP" -- op_SWAP
+           | "DUP" -- op_DUP
+           | "OVER" -- op_OVER
+           | "DROP" -- op_DROP
+           | "NIP" -- op_NIP
+           | "ROT" -- op_ROT
+           | "-ROT" -- op_MINUS_ROT
+           | "ROTREV" -- op_ROTREV
+           | "2SWAP" -- op_2SWAP
+           | "SWAP2" -- op_SWAP2
+           | "2DROP" -- op_2DROP
+           | "DROP2" -- op_DROP2
+           | "2DUP" -- op_2DUP
+           | "DUP2" -- op_DUP2
+           | "2OVER" -- op_2OVER
+           | "OVER2" -- op_OVER2
+           | "PICK" -- op_PICK
+           | "PUSHX" -- op_PUSHX
+           | "ROLLX" -- op_ROLLX
+           | "-ROLLX" -- op_MINUS_ROLLX
+           | "ROLLREVX" -- op_ROLLREVX
+           | "BLKSWX" -- op_BLKSWX
+           | "REVX" -- op_REVX
+           | "DROPX" -- op_DROPX
+           | "TUCK" -- op_TUCK
+           | "XCHGX" -- op_XCHGX
+           | "DEPTH" -- op_DEPTH
+           | "CHKDEPTH" -- op_CHKDEPTH
+           | "ONLYTOPX" -- op_ONLYTOPX
+           | "ONLYX" -- op_ONLYX
+           | "ZERO" -- op_ZERO
+           | "FALSE" -- op_FALSE
+           | "ONE" -- op_ONE
+           | "TWO" -- op_TWO
+           | "TEN" -- op_TEN
+           | "TRUE" -- op_TRUE
+           | integerLiteral "PUSHINT" -- op_PUSHINT
+           | integerLiteral "INT" -- op_INT
+           | integerLiteral "PUSHINTX" -- op_PUSHINTX
+           | integerLiteral "INTX" -- op_INTX
+           | integerLiteral "PUSHPOW2" -- op_PUSHPOW2
+           | "PUSHNAN" -- op_PUSHNAN
+           | integerLiteral "PUSHPOW2DEC" -- op_PUSHPOW2DEC
+           | integerLiteral "PUSHNEGPOW2" -- op_PUSHNEGPOW2
+           | cellLiteral "PUSHREF" -- op_PUSHREF
+           | cellLiteral "PUSHREFSLICE" -- op_PUSHREFSLICE
+           | cellLiteral "PUSHREFCONT" -- op_PUSHREFCONT
+           | cellLiteral "PUSHSLICE" -- op_PUSHSLICE
+           | cellLiteral "SLICE" -- op_SLICE
+           | "ADD" -- op_ADD
+           | "SUB" -- op_SUB
+           | "SUBR" -- op_SUBR
+           | "NEGATE" -- op_NEGATE
+           | "INC" -- op_INC
+           | "DEC" -- op_DEC
+           | integerLiteral "ADDCONST" -- op_ADDCONST
+           | integerLiteral "ADDINT" -- op_ADDINT
+           | integerLiteral "SUBCONST" -- op_SUBCONST
+           | integerLiteral "SUBINT" -- op_SUBINT
+           | integerLiteral "MULCONST" -- op_MULCONST
+           | integerLiteral "MULINT" -- op_MULINT
+           | "MUL" -- op_MUL
+           | "DIV" -- op_DIV
+           | "DIVR" -- op_DIVR
+           | "DIVC" -- op_DIVC
+           | "MOD" -- op_MOD
+           | "DIVMOD" -- op_DIVMOD
+           | "DIVMODR" -- op_DIVMODR
+           | "DIVMODC" -- op_DIVMODC
+           | "RSHIFTR" -- op_RSHIFTR
+           | "RSHIFTC" -- op_RSHIFTC
+           | "MULDIV" -- op_MULDIV
+           | "MULDIVR" -- op_MULDIVR
+           | "MULMOD" -- op_MULMOD
+           | "MULDIVMOD" -- op_MULDIVMOD
+           | "MULDIVMODR" -- op_MULDIVMODR
+           | "MULDIVMODC" -- op_MULDIVMODC
+           | "MULRSHIFT" -- op_MULRSHIFT
+           | "MULRSHIFTR" -- op_MULRSHIFTR
+           | "MULRSHIFTC" -- op_MULRSHIFTC
+           | "LSHIFTDIV" -- op_LSHIFTDIV
+           | "LSHIFTDIVR" -- op_LSHIFTDIVR
+           | "LSHIFTDIVC" -- op_LSHIFTDIVC
+           | "LSHIFT" -- op_LSHIFT
+           | "RSHIFT" -- op_RSHIFT
+           | "POW2" -- op_POW2
+           | "AND" -- op_AND
+           | "OR" -- op_OR
+           | "XOR" -- op_XOR
+           | "NOT" -- op_NOT
+
+    // Cell literal
+    cellLiteral = "x{" hexDigit+ "}"
+
+    // Integer Literal
+    // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")
+    // digit defined in Ohm's built-in rules (otherwise: digit = "0".."9")
+    integerLiteral = integerLiteralHex | integerLiteralDec // Order is important
+    integerLiteralDec = digit+
+    integerLiteralHex = "0x" hexDigit+
+                      | "0X" hexDigit+
 
     // Letters
     letterAsciiLC = "a".."z"

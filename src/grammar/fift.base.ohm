@@ -1,0 +1,39 @@
+Fift {
+    // Starting point of the program
+    Program = "PROGRAM{" ProgramItem* "}END>c"
+    ProgramItem = FunctionDeclaration | FunctionImplementation
+    FunctionDeclaration = "DECLPROC" id
+    FunctionImplementation = id ("PROCREF"|"PROC") ":<{" Opcode* "}>"
+    
+    // Opcodes
+    Opcode = ""
+
+    // Cell literal
+    cellLiteral = "x{" hexDigit+ "}"
+
+    // Integer Literal
+    // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")
+    // digit defined in Ohm's built-in rules (otherwise: digit = "0".."9")
+    integerLiteral = integerLiteralHex | integerLiteralDec // Order is important
+    integerLiteralDec = digit+
+    integerLiteralHex = "0x" hexDigit+
+                      | "0X" hexDigit+
+
+    // Letters
+    letterAsciiLC = "a".."z"
+    letterAsciiUC = "A".."Z"
+    letterAscii = letterAsciiLC | letterAsciiUC
+    letterComment = letterAsciiLC | letterAsciiUC | digit | "_"
+
+    // ID
+    idStart = letterAscii | "_"
+    idPart = letterAscii | digit | "_"
+    id = #idStart #(idPart*)
+
+    // Comments
+    space += comment | lineTerminator
+    comment = multiLineComment | singleLineComment
+    lineTerminator = "\n" | "\r" | "\u2028" | "\u2029"
+    multiLineComment = "/*" (~"*/" any)* "*/"
+    singleLineComment = "//" (~lineTerminator any)*
+}
