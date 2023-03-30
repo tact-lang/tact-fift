@@ -15,7 +15,7 @@ Fift {
     Opcode = ""
 
     // Cell literal
-    cellLiteral = "x{" hexDigit+ "}"
+    cellLiteral = "x{" hexDigit* "}"
 
     // Integer Literal
     // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")

@@ -92,8 +92,21 @@ function compileBody(builder: ContinuationBuilder, instructions: Instruction[]) 
             continue;
         }
 
+        // Store opcode with ref argument
+        if (inst.kind === 'ref') {
+            let v = opcodes.opcodeMap.get(inst.name);
+            if (!v || v.kind !== 'ref') {
+                throw Error(`Unknown opcode: ${inst.name}`);
+            }
+            if (!v.serializer) {
+                throw Error(`Opcode does not have serializer: ${inst.name}`);
+            }
+            v.serializer(builder, inst.arg);
+            continue;
+        }
+
         // Unhandled instruction
-        throw Error(`Unhandled instruction: ${inst.kind}`);
+        throw Error(`Unhandled instruction`);
     }
 }
 

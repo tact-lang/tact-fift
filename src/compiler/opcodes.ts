@@ -1,4 +1,5 @@
-import { BitBuilder, BitString } from "ton-core";
+import { BitBuilder, BitString, Cell } from "ton-core";
+import { fits } from "../utils/fits";
 import { ContinuationBuilder } from "./builder";
 
 export type DefinedOpcode = {
@@ -15,6 +16,7 @@ export type DefinedOpcode = {
     kind: 'ref',
     name: string,
     aliases: string[],
+    serializer: ((src: ContinuationBuilder, arg: Cell) => void) | null,
 }
 
 export class Opcodes {
@@ -65,14 +67,21 @@ export class Opcodes {
         const res: DefinedOpcode = {
             kind: 'ref',
             name,
-            aliases: []
+            aliases: [],
+            serializer: null
         };
         this.opcodes.push(res);
-        return {
+        let b = {
             also(name2: string) {
                 res.aliases.push(name2);
+                return b;
+            },
+            serializer(f: (src: ContinuationBuilder, arg: Cell) => void) {
+                res.serializer = f;
+                return b;
             }
         }
+        return b;
     }
 
     prepare() {
@@ -94,6 +103,41 @@ const serializers = {
             bits.writeUint(arg - 1n, 8);
             src.store(bits.build().subbuffer(0, bits.length)!);
         }
+    },
+    'pushint': (src: ContinuationBuilder, arg: bigint) => {
+        let bits = new BitBuilder();
+        if (-5n <= arg && arg <= 10n) {
+            bits.writeUint(0x7, 4);
+            bits.writeUint(Number(arg) & 0xf, 4);
+        } else if (-128n <= arg && arg <= 127n) {
+            bits.writeUint(0x80, 8);
+            bits.writeInt(arg, 8);
+        } else if (-32768n <= arg && arg <= 32767n) {
+            bits.writeUint(0x81, 8);
+            bits.writeInt(arg, 16);
+        } else {
+            let found = false;
+            for (let l = 0; l < 30; l++) {
+                let n = 19 + l * 8;
+                let vBits = 1n << (BigInt(n) - 1n);
+                if (-vBits <= arg && arg < vBits) {
+                    bits.writeUint(0x82, 8);
+                    bits.writeUint(l, 5);
+                    bits.writeInt(arg, n);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new Error(`Cannot encode integer ${arg}`);
+            }
+        }
+        src.store(bits.build().subbuffer(0, bits.length)!);
+    },
+    'ref': (code: string) => {
+        return (src: ContinuationBuilder, arg: Cell) => {
+            src.store(Buffer.from(code, 'hex'), [arg]);
+        }
     }
 }
 
@@ -102,6 +146,8 @@ const serializers = {
 //
 
 const o = new Opcodes();
+
+// Stack operations
 o.def('00', 'NOP');
 o.def('01', 'SWAP');
 o.def('20', 'DUP');
@@ -135,45 +181,96 @@ o.def('7A', 'TEN');
 o.def('7F', 'TRUE');
 o.defInt('PUSHINT')
     .also('INT')
+    .serializer(serializers.pushint);
+o.defInt('PUSHINTX')
+    .also('INTX')
     .serializer((src, arg) => {
-        let bits = new BitBuilder();
-        if (-5n <= arg && arg <= 10n) {
-            bits.writeUint(0x7, 4);
-            bits.writeUint(Number(arg) & 0xf, 4);
-        } else if (-128n <= arg && arg <= 127n) {
-            bits.writeUint(0x80, 8);
-            bits.writeInt(arg, 8);
-        } else if (-32768n <= arg && arg <= 32767n) {
-            bits.writeUint(0x81, 8);
-            bits.writeInt(arg, 16);
-        } else {
-            let found = false;
-            for (let l = 0; l < 30; l++) {
-                let n = 19 + l * 8;
-                let vBits = 1n << (BigInt(n) - 1n);
-                if (-vBits <= arg && arg < vBits) {
-                    bits.writeUint(0x82, 8);
-                    bits.writeUint(l, 5);
-                    bits.writeInt(arg, n);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                throw new Error(`Cannot encode integer ${arg}`);
-            }
+
+        // 8 bit
+        if (fits(arg, 8)) {
+            serializers.pushint(src, arg);
+            return;
         }
-        src.store(bits.build().subbuffer(0, bits.length)!);
+
+        // Split number to a power of two + rest
+        function pow2decomp(s: bigint) {
+            let count = 0;
+            while (s % 2n == 0n) {
+                count++;
+                s /= 2n;
+            }
+            return [count, s] as const;
+        }
+        let [pows, v] = pow2decomp(arg);
+
+        // This is a pure power of two
+        if (v === 1n) {
+            serializers["8u+1"]('83')(src, BigInt(pows)); // PUSHPOW2
+            return;
+        }
+
+        if (v === -1n) {
+            serializers["8u+1"]('85')(src, BigInt(pows)); // PUSHNEGPOW2
+            return;
+        }
+
+        // This variable has enought number of zeros in the begining
+        if (pows > 20) {
+            serializers.pushint(src, BigInt(v)); // Push the rest
+            serializers["8u+1"]('AA')(src, BigInt(pows)); // LSHIFT# shift left
+            return;
+        }
+
+        // Check if power of two is a power of two minus one
+        [pows, v] = pow2decomp(arg + 1n);
+        if (v === 1n) {
+            serializers["8u+1"]('84')(src, BigInt(pows)); // PUSHPOW2DEC
+            return;
+        }
+
+        // Fallback
+        serializers.pushint(src, arg);
     });
-o.defInt('PUSHINTX').also('INTX');
 o.defInt('PUSHPOW2').serializer(serializers["8u+1"]('83'));
 o.def('83FF', 'PUSHNAN');
 o.defInt('PUSHPOW2DEC').serializer(serializers["8u+1"]('84'));
 o.defInt('PUSHNEGPOW2').serializer(serializers["8u+1"]('85'));
-o.defRef('PUSHREF');
-o.defRef('PUSHREFSLICE');
-o.defRef('PUSHREFCONT');
-o.defRef('PUSHSLICE').also('SLICE');
+o.defRef('PUSHREF').serializer(serializers.ref('88'));
+o.defRef('PUSHREFSLICE').serializer(serializers.ref('89'));
+o.defRef('PUSHREFCONT').serializer(serializers.ref('8A'));
+o.defRef('PUSHSLICE')
+    .also('SLICE')
+    .serializer((src, arg) => {
+
+        // Push as ref
+        if (arg.refs.length > src.availableRefs || (arg.bits.length + 17) > src.availableBits) {
+            serializers.ref('89')(src, arg); // PUSHREFSLICE
+            return;
+        }
+
+        // If bitstring
+        if (arg.refs.length === 0) {
+            let bits = new BitBuilder();
+            bits.writeUint(0x8B, 8); // PUSHSLICE
+            let l = Math.ceil((arg.bits.length - 4) / 8);
+            let n = l * 8 + 4;
+            bits.writeUint(l, 4);
+            bits.writeBits(arg.bits);
+            let i = arg.bits.length;
+            if (i < n) {
+                bits.writeBit(true);
+                i++;
+            }
+            while (i < n) {
+                bits.writeBit(false);
+                i++
+            }
+            src.store(bits.build().subbuffer(0, bits.length)!);
+            return;
+        }
+
+        throw Error('Not implemented');
+    });
 
 // Arithmetic
 o.def('A0', 'ADD');
@@ -195,11 +292,11 @@ o.def('A90D', 'DIVMODR');
 o.def('A90E', 'DIVMODC');
 o.def('A925', 'RSHIFTR');
 o.def('A926', 'RSHIFTC');
-// o.defInt('RSHIFTR#');
-// o.defInt('RSHIFTC#');
-// o.defInt('MODPOW2#');
-// o.defInt('MODPOW2R#');
-// o.defInt('MODPOW2C#');
+o.defInt('RSHIFTR#').serializer(serializers["8u+1"]('A935'));
+o.defInt('RSHIFTC#').serializer(serializers["8u+1"]('A936'));
+o.defInt('MODPOW2#').serializer(serializers["8u+1"]('A938'));
+o.defInt('MODPOW2R#').serializer(serializers["8u+1"]('A939'));
+o.defInt('MODPOW2C#').serializer(serializers["8u+1"]('A93A'));
 o.def('A984', 'MULDIV');
 o.def('A985', 'MULDIVR');
 o.def('A988', 'MULMOD');
@@ -209,15 +306,17 @@ o.def('A98E', 'MULDIVMODC');
 o.def('A9A4', 'MULRSHIFT');
 o.def('A9A5', 'MULRSHIFTR');
 o.def('A9A6', 'MULRSHIFTC');
-// o.defInt('MULRSHIFT#');
-// o.defInt('MULRSHIFTR#');
-// o.defInt('MULRSHIFTC#');
+o.defInt('MULRSHIFT#').serializer(serializers["8u+1"]('A9B4'));
+o.defInt('MULRSHIFTR#').serializer(serializers["8u+1"]('A9B5'));
+o.defInt('MULRSHIFTC#').serializer(serializers["8u+1"]('A9B6'));
 o.def('A9C4', 'LSHIFTDIV');
 o.def('A9C5', 'LSHIFTDIVR');
 o.def('A9C6', 'LSHIFTDIVC');
-// o.defInt('LSHIFT#DIV');
-// o.defInt('LSHIFT#DIVR');
-// o.defInt('LSHIFT#DIVC');
+o.defInt('LSHIFT#DIV').serializer(serializers["8u+1"]('A9D4'));
+o.defInt('LSHIFT#DIVR').serializer(serializers["8u+1"]('A9D5'));
+o.defInt('LSHIFT#DIVC').serializer(serializers["8u+1"]('A9D6'));
+o.defInt('LSHIFT#').serializer(serializers["8u+1"]('AA'));
+o.defInt('RSHIFT#').serializer(serializers["8u+1"]('AB'));
 o.def('AC', 'LSHIFT');
 o.def('AD', 'RSHIFT');
 o.def('AE', 'POW2');

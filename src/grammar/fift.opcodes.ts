@@ -59,6 +59,11 @@ export type Opcode =
     | { kind: 'simple', name: 'DIVMODC' }
     | { kind: 'simple', name: 'RSHIFTR' }
     | { kind: 'simple', name: 'RSHIFTC' }
+    | { kind: 'int', name: 'RSHIFTR#', arg: bigint }
+    | { kind: 'int', name: 'RSHIFTC#', arg: bigint }
+    | { kind: 'int', name: 'MODPOW2#', arg: bigint }
+    | { kind: 'int', name: 'MODPOW2R#', arg: bigint }
+    | { kind: 'int', name: 'MODPOW2C#', arg: bigint }
     | { kind: 'simple', name: 'MULDIV' }
     | { kind: 'simple', name: 'MULDIVR' }
     | { kind: 'simple', name: 'MULMOD' }
@@ -68,9 +73,17 @@ export type Opcode =
     | { kind: 'simple', name: 'MULRSHIFT' }
     | { kind: 'simple', name: 'MULRSHIFTR' }
     | { kind: 'simple', name: 'MULRSHIFTC' }
+    | { kind: 'int', name: 'MULRSHIFT#', arg: bigint }
+    | { kind: 'int', name: 'MULRSHIFTR#', arg: bigint }
+    | { kind: 'int', name: 'MULRSHIFTC#', arg: bigint }
     | { kind: 'simple', name: 'LSHIFTDIV' }
     | { kind: 'simple', name: 'LSHIFTDIVR' }
     | { kind: 'simple', name: 'LSHIFTDIVC' }
+    | { kind: 'int', name: 'LSHIFT#DIV', arg: bigint }
+    | { kind: 'int', name: 'LSHIFT#DIVR', arg: bigint }
+    | { kind: 'int', name: 'LSHIFT#DIVC', arg: bigint }
+    | { kind: 'int', name: 'LSHIFT#', arg: bigint }
+    | { kind: 'int', name: 'RSHIFT#', arg: bigint }
     | { kind: 'simple', name: 'LSHIFT' }
     | { kind: 'simple', name: 'RSHIFT' }
     | { kind: 'simple', name: 'POW2' }
@@ -106,46 +119,25 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_MINUS_ROT(arg0) {
             return { kind: 'simple', name: '-ROT' };
         },
-        Opcode_op_ROTREV(arg0) {
-            return { kind: 'simple', name: '-ROT' };
-        },
         Opcode_op_2SWAP(arg0) {
-            return { kind: 'simple', name: '2SWAP' };
-        },
-        Opcode_op_SWAP2(arg0) {
             return { kind: 'simple', name: '2SWAP' };
         },
         Opcode_op_2DROP(arg0) {
             return { kind: 'simple', name: '2DROP' };
         },
-        Opcode_op_DROP2(arg0) {
-            return { kind: 'simple', name: '2DROP' };
-        },
         Opcode_op_2DUP(arg0) {
-            return { kind: 'simple', name: '2DUP' };
-        },
-        Opcode_op_DUP2(arg0) {
             return { kind: 'simple', name: '2DUP' };
         },
         Opcode_op_2OVER(arg0) {
             return { kind: 'simple', name: '2OVER' };
         },
-        Opcode_op_OVER2(arg0) {
-            return { kind: 'simple', name: '2OVER' };
-        },
         Opcode_op_PICK(arg0) {
-            return { kind: 'simple', name: 'PICK' };
-        },
-        Opcode_op_PUSHX(arg0) {
             return { kind: 'simple', name: 'PICK' };
         },
         Opcode_op_ROLLX(arg0) {
             return { kind: 'simple', name: 'ROLLX' };
         },
         Opcode_op_MINUS_ROLLX(arg0) {
-            return { kind: 'simple', name: '-ROLLX' };
-        },
-        Opcode_op_ROLLREVX(arg0) {
             return { kind: 'simple', name: '-ROLLX' };
         },
         Opcode_op_BLKSWX(arg0) {
@@ -178,9 +170,6 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_ZERO(arg0) {
             return { kind: 'simple', name: 'ZERO' };
         },
-        Opcode_op_FALSE(arg0) {
-            return { kind: 'simple', name: 'ZERO' };
-        },
         Opcode_op_ONE(arg0) {
             return { kind: 'simple', name: 'ONE' };
         },
@@ -196,13 +185,7 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_PUSHINT(arg0, arg1) {
             return { kind: 'int', name: 'PUSHINT', arg: BigInt(arg0.sourceString) };
         },
-        Opcode_op_INT(arg0, arg1) {
-            return { kind: 'int', name: 'PUSHINT', arg: BigInt(arg0.sourceString) };
-        },
         Opcode_op_PUSHINTX(arg0, arg1) {
-            return { kind: 'int', name: 'PUSHINTX', arg: BigInt(arg0.sourceString) };
-        },
-        Opcode_op_INTX(arg0, arg1) {
             return { kind: 'int', name: 'PUSHINTX', arg: BigInt(arg0.sourceString) };
         },
         Opcode_op_PUSHPOW2(arg0, arg1) {
@@ -216,6 +199,18 @@ export function registerOpcodes(semantics: FiftSemantics) {
         },
         Opcode_op_PUSHNEGPOW2(arg0, arg1) {
             return { kind: 'int', name: 'PUSHNEGPOW2', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_PUSHREF(arg0, arg1) {
+            return { kind: 'ref', name: 'PUSHREF', arg: arg0.resolve_cell() };
+        },
+        Opcode_op_PUSHREFSLICE(arg0, arg1) {
+            return { kind: 'ref', name: 'PUSHREFSLICE', arg: arg0.resolve_cell() };
+        },
+        Opcode_op_PUSHREFCONT(arg0, arg1) {
+            return { kind: 'ref', name: 'PUSHREFCONT', arg: arg0.resolve_cell() };
+        },
+        Opcode_op_PUSHSLICE(arg0, arg1) {
+            return { kind: 'ref', name: 'PUSHSLICE', arg: arg0.resolve_cell() };
         },
         Opcode_op_ADD(arg0) {
             return { kind: 'simple', name: 'ADD' };
@@ -238,19 +233,10 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_ADDCONST(arg0, arg1) {
             return { kind: 'int', name: 'ADDCONST', arg: BigInt(arg0.sourceString) };
         },
-        Opcode_op_ADDINT(arg0, arg1) {
-            return { kind: 'int', name: 'ADDCONST', arg: BigInt(arg0.sourceString) };
-        },
         Opcode_op_SUBCONST(arg0, arg1) {
             return { kind: 'int', name: 'SUBCONST', arg: BigInt(arg0.sourceString) };
         },
-        Opcode_op_SUBINT(arg0, arg1) {
-            return { kind: 'int', name: 'SUBCONST', arg: BigInt(arg0.sourceString) };
-        },
         Opcode_op_MULCONST(arg0, arg1) {
-            return { kind: 'int', name: 'MULCONST', arg: BigInt(arg0.sourceString) };
-        },
-        Opcode_op_MULINT(arg0, arg1) {
             return { kind: 'int', name: 'MULCONST', arg: BigInt(arg0.sourceString) };
         },
         Opcode_op_MUL(arg0) {
@@ -283,6 +269,21 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_RSHIFTC(arg0) {
             return { kind: 'simple', name: 'RSHIFTC' };
         },
+        Opcode_op_RSHIFTR_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'RSHIFTR#', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_RSHIFTC_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'RSHIFTC#', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_MODPOW2_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'MODPOW2#', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_MODPOW2R_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'MODPOW2R#', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_MODPOW2C_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'MODPOW2C#', arg: BigInt(arg0.sourceString) };
+        },
         Opcode_op_MULDIV(arg0) {
             return { kind: 'simple', name: 'MULDIV' };
         },
@@ -310,6 +311,15 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_MULRSHIFTC(arg0) {
             return { kind: 'simple', name: 'MULRSHIFTC' };
         },
+        Opcode_op_MULRSHIFT_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'MULRSHIFT#', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_MULRSHIFTR_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'MULRSHIFTR#', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_MULRSHIFTC_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'MULRSHIFTC#', arg: BigInt(arg0.sourceString) };
+        },
         Opcode_op_LSHIFTDIV(arg0) {
             return { kind: 'simple', name: 'LSHIFTDIV' };
         },
@@ -318,6 +328,21 @@ export function registerOpcodes(semantics: FiftSemantics) {
         },
         Opcode_op_LSHIFTDIVC(arg0) {
             return { kind: 'simple', name: 'LSHIFTDIVC' };
+        },
+        Opcode_op_LSHIFT_HASH_DIV(arg0, arg1) {
+            return { kind: 'int', name: 'LSHIFT#DIV', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_LSHIFT_HASH_DIVR(arg0, arg1) {
+            return { kind: 'int', name: 'LSHIFT#DIVR', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_LSHIFT_HASH_DIVC(arg0, arg1) {
+            return { kind: 'int', name: 'LSHIFT#DIVC', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_LSHIFT_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'LSHIFT#', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_RSHIFT_HASH(arg0, arg1) {
+            return { kind: 'int', name: 'RSHIFT#', arg: BigInt(arg0.sourceString) };
         },
         Opcode_op_LSHIFT(arg0) {
             return { kind: 'simple', name: 'LSHIFT' };

@@ -1,4 +1,4 @@
-import { beginCell, Builder } from "ton-core";
+import { beginCell, Builder, Cell } from "ton-core";
 
 export class ContinuationBuilder {
     builders: Builder[];
@@ -7,13 +7,31 @@ export class ContinuationBuilder {
         this.builders = [src];
     }
 
-    store(bytes: Buffer) {
+    get availableBits() {
+        return this.builders[this.builders.length - 1].availableBits;
+    }
+
+    get availableRefs() {
+        return this.builders[this.builders.length - 1].availableRefs - 1;
+    }
+
+    advance() {
+        let b = beginCell();
+        this.builders.push(b);
+    }
+
+    store(bytes: Buffer, refs?: Cell[]) {
         let b = this.builders[this.builders.length - 1];
-        if (b.availableBits < bytes.length * 8) {
-            b = beginCell();
-            this.builders.push(b);
+        if (b.availableBits < bytes.length * 8 || (refs && (b.availableRefs - 1) < refs.length)) {
+            this.advance();
+            b = this.builders[this.builders.length - 1]
         }
         b.storeBuffer(bytes);
+        if (refs) {
+            for (let r of refs) {
+                b.storeRef(r);
+            }
+        }
     }
 
     complete() {

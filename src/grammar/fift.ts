@@ -1,3 +1,4 @@
+import { BitReader, BitString, Cell } from 'ton-core';
 import fiftGrammar from './fift.ohm-bundle';
 import { Opcode, registerOpcodes } from './fift.opcodes';
 
@@ -65,7 +66,14 @@ semantics.addOperation<Instruction>('resolve_instruction', {
     Instruction_opcode(arg0) {
         return arg0.resolve_opcode();
     },
-})
+});
+
+semantics.addOperation<Cell>('resolve_cell', {
+    cellLiteral(arg0, arg1, arg2) {
+        let s = Buffer.from(arg1.sourceString, 'hex');
+        return new Cell({ bits: new BitString(s, 0, 8 * s.length) });
+    },
+});
 
 registerOpcodes(semantics);
 

@@ -1,11 +1,18 @@
 PROGRAM{
   DECLPROC recv_internal;
+  DECLPROC ?fun_68300;
   DECLPROC ?fun_69412;
+  DECLPROC ?fun_72429;
   DECLPROC ?fun_73477;
+  DECLPROC ?fun_76430;
   DECLPROC ?fun_77670;
+  DECLPROC ?fun_80559;
   DECLPROC ?fun_81735;
+  DECLPROC ?fun_84552;
   DECLPROC ?fun_85920;
+  DECLPROC ?fun_88681;
   DECLPROC ?fun_89985;
+  DECLPROC ?fun_92682;
   DECLPROC ?fun_96811;
   DECLPROC ?fun_98243;
   DECLPROC ?fun_126698;
@@ -13,29 +20,55 @@ PROGRAM{
   recv_internal PROC:<{
     ADD
   }>
+  ?fun_68300 PROC:<{
+    x{3132338} PUSHSLICE
+  }>
   ?fun_69412 PROC:<{
     DROP2
     32760 PUSHINT
+  }>
+  ?fun_72429 PROC:<{
+    x{8} PUSHSLICE
   }>
   ?fun_73477 PROC:<{
     DROP2
     -32760 PUSHINT
   }>
+  ?fun_76430 PROC:<{
+    x{48656C6C6F2C20576F726C64218} PUSHSLICE
+  }>
   ?fun_77670 PROC:<{
     DROP2
     50 PUSHINT
+  }>
+  ?fun_80559 PROC:<{
+    DROP2
+    10 PUSHNEGPOW2
   }>
   ?fun_81735 PROC:<{
     DROP2
     -120 PUSHINT
   }>
+  ?fun_84552 PROC:<{
+    DROP2
+    10 PUSHPOW2DEC
+  }>
   ?fun_85920 PROC:<{
     DROP2
     -3 PUSHINT
   }>
+  ?fun_88681 PROC:<{
+    DROP2
+    10 PUSHPOW2
+  }>
   ?fun_89985 PROC:<{
     DROP2
     5 PUSHINT
+  }>
+  ?fun_92682 PROC:<{
+    DROP2
+    675 PUSHINT
+    27 LSHIFT
   }>
   ?fun_96811 PROC:<{
     DROP2

@@ -12,100 +12,190 @@ Fift {
     Instruction = Opcode --opcode
 
     // Opcodes
-    Opcode = "NOP" -- op_NOP
-           | "SWAP" -- op_SWAP
-           | "DUP" -- op_DUP
-           | "OVER" -- op_OVER
-           | "DROP" -- op_DROP
-           | "NIP" -- op_NIP
-           | "ROT" -- op_ROT
-           | "-ROT" -- op_MINUS_ROT
-           | "ROTREV" -- op_ROTREV
-           | "2SWAP" -- op_2SWAP
-           | "SWAP2" -- op_SWAP2
-           | "2DROP" -- op_2DROP
-           | "DROP2" -- op_DROP2
-           | "2DUP" -- op_2DUP
-           | "DUP2" -- op_DUP2
-           | "2OVER" -- op_2OVER
-           | "OVER2" -- op_OVER2
-           | "PICK" -- op_PICK
-           | "PUSHX" -- op_PUSHX
-           | "ROLLX" -- op_ROLLX
-           | "-ROLLX" -- op_MINUS_ROLLX
-           | "ROLLREVX" -- op_ROLLREVX
-           | "BLKSWX" -- op_BLKSWX
-           | "REVX" -- op_REVX
-           | "DROPX" -- op_DROPX
-           | "TUCK" -- op_TUCK
-           | "XCHGX" -- op_XCHGX
-           | "DEPTH" -- op_DEPTH
-           | "CHKDEPTH" -- op_CHKDEPTH
-           | "ONLYTOPX" -- op_ONLYTOPX
-           | "ONLYX" -- op_ONLYX
-           | "ZERO" -- op_ZERO
-           | "FALSE" -- op_FALSE
-           | "ONE" -- op_ONE
-           | "TWO" -- op_TWO
-           | "TEN" -- op_TEN
-           | "TRUE" -- op_TRUE
-           | integerLiteral "PUSHINT" -- op_PUSHINT
-           | integerLiteral "INT" -- op_INT
-           | integerLiteral "PUSHINTX" -- op_PUSHINTX
-           | integerLiteral "INTX" -- op_INTX
-           | integerLiteral "PUSHPOW2" -- op_PUSHPOW2
-           | "PUSHNAN" -- op_PUSHNAN
-           | integerLiteral "PUSHPOW2DEC" -- op_PUSHPOW2DEC
-           | integerLiteral "PUSHNEGPOW2" -- op_PUSHNEGPOW2
-           | cellLiteral "PUSHREF" -- op_PUSHREF
-           | cellLiteral "PUSHREFSLICE" -- op_PUSHREFSLICE
-           | cellLiteral "PUSHREFCONT" -- op_PUSHREFCONT
-           | cellLiteral "PUSHSLICE" -- op_PUSHSLICE
-           | cellLiteral "SLICE" -- op_SLICE
-           | "ADD" -- op_ADD
-           | "SUB" -- op_SUB
-           | "SUBR" -- op_SUBR
-           | "NEGATE" -- op_NEGATE
-           | "INC" -- op_INC
-           | "DEC" -- op_DEC
-           | integerLiteral "ADDCONST" -- op_ADDCONST
-           | integerLiteral "ADDINT" -- op_ADDINT
-           | integerLiteral "SUBCONST" -- op_SUBCONST
-           | integerLiteral "SUBINT" -- op_SUBINT
-           | integerLiteral "MULCONST" -- op_MULCONST
-           | integerLiteral "MULINT" -- op_MULINT
-           | "MUL" -- op_MUL
-           | "DIV" -- op_DIV
-           | "DIVR" -- op_DIVR
-           | "DIVC" -- op_DIVC
-           | "MOD" -- op_MOD
-           | "DIVMOD" -- op_DIVMOD
-           | "DIVMODR" -- op_DIVMODR
-           | "DIVMODC" -- op_DIVMODC
-           | "RSHIFTR" -- op_RSHIFTR
-           | "RSHIFTC" -- op_RSHIFTC
-           | "MULDIV" -- op_MULDIV
-           | "MULDIVR" -- op_MULDIVR
-           | "MULMOD" -- op_MULMOD
-           | "MULDIVMOD" -- op_MULDIVMOD
-           | "MULDIVMODR" -- op_MULDIVMODR
-           | "MULDIVMODC" -- op_MULDIVMODC
-           | "MULRSHIFT" -- op_MULRSHIFT
-           | "MULRSHIFTR" -- op_MULRSHIFTR
-           | "MULRSHIFTC" -- op_MULRSHIFTC
-           | "LSHIFTDIV" -- op_LSHIFTDIV
-           | "LSHIFTDIVR" -- op_LSHIFTDIVR
-           | "LSHIFTDIVC" -- op_LSHIFTDIVC
-           | "LSHIFT" -- op_LSHIFT
-           | "RSHIFT" -- op_RSHIFT
-           | "POW2" -- op_POW2
-           | "AND" -- op_AND
-           | "OR" -- op_OR
-           | "XOR" -- op_XOR
-           | "NOT" -- op_NOT
+    Opcode = op_NOP -- op_NOP
+           | op_SWAP -- op_SWAP
+           | op_DUP -- op_DUP
+           | op_OVER -- op_OVER
+           | op_DROP -- op_DROP
+           | op_NIP -- op_NIP
+           | op_ROT -- op_ROT
+           | op_MINUS_ROT -- op_MINUS_ROT
+           | op_2SWAP -- op_2SWAP
+           | op_2DROP -- op_2DROP
+           | op_2DUP -- op_2DUP
+           | op_2OVER -- op_2OVER
+           | op_PICK -- op_PICK
+           | op_ROLLX -- op_ROLLX
+           | op_MINUS_ROLLX -- op_MINUS_ROLLX
+           | op_BLKSWX -- op_BLKSWX
+           | op_REVX -- op_REVX
+           | op_DROPX -- op_DROPX
+           | op_TUCK -- op_TUCK
+           | op_XCHGX -- op_XCHGX
+           | op_DEPTH -- op_DEPTH
+           | op_CHKDEPTH -- op_CHKDEPTH
+           | op_ONLYTOPX -- op_ONLYTOPX
+           | op_ONLYX -- op_ONLYX
+           | op_ZERO -- op_ZERO
+           | op_ONE -- op_ONE
+           | op_TWO -- op_TWO
+           | op_TEN -- op_TEN
+           | op_TRUE -- op_TRUE
+           | integerLiteral op_PUSHINT -- op_PUSHINT
+           | integerLiteral op_PUSHINTX -- op_PUSHINTX
+           | integerLiteral op_PUSHPOW2 -- op_PUSHPOW2
+           | op_PUSHNAN -- op_PUSHNAN
+           | integerLiteral op_PUSHPOW2DEC -- op_PUSHPOW2DEC
+           | integerLiteral op_PUSHNEGPOW2 -- op_PUSHNEGPOW2
+           | cellLiteral op_PUSHREF -- op_PUSHREF
+           | cellLiteral op_PUSHREFSLICE -- op_PUSHREFSLICE
+           | cellLiteral op_PUSHREFCONT -- op_PUSHREFCONT
+           | cellLiteral op_PUSHSLICE -- op_PUSHSLICE
+           | op_ADD -- op_ADD
+           | op_SUB -- op_SUB
+           | op_SUBR -- op_SUBR
+           | op_NEGATE -- op_NEGATE
+           | op_INC -- op_INC
+           | op_DEC -- op_DEC
+           | integerLiteral op_ADDCONST -- op_ADDCONST
+           | integerLiteral op_SUBCONST -- op_SUBCONST
+           | integerLiteral op_MULCONST -- op_MULCONST
+           | op_MUL -- op_MUL
+           | op_DIV -- op_DIV
+           | op_DIVR -- op_DIVR
+           | op_DIVC -- op_DIVC
+           | op_MOD -- op_MOD
+           | op_DIVMOD -- op_DIVMOD
+           | op_DIVMODR -- op_DIVMODR
+           | op_DIVMODC -- op_DIVMODC
+           | op_RSHIFTR -- op_RSHIFTR
+           | op_RSHIFTC -- op_RSHIFTC
+           | integerLiteral op_RSHIFTR_HASH -- op_RSHIFTR_HASH
+           | integerLiteral op_RSHIFTC_HASH -- op_RSHIFTC_HASH
+           | integerLiteral op_MODPOW2_HASH -- op_MODPOW2_HASH
+           | integerLiteral op_MODPOW2R_HASH -- op_MODPOW2R_HASH
+           | integerLiteral op_MODPOW2C_HASH -- op_MODPOW2C_HASH
+           | op_MULDIV -- op_MULDIV
+           | op_MULDIVR -- op_MULDIVR
+           | op_MULMOD -- op_MULMOD
+           | op_MULDIVMOD -- op_MULDIVMOD
+           | op_MULDIVMODR -- op_MULDIVMODR
+           | op_MULDIVMODC -- op_MULDIVMODC
+           | op_MULRSHIFT -- op_MULRSHIFT
+           | op_MULRSHIFTR -- op_MULRSHIFTR
+           | op_MULRSHIFTC -- op_MULRSHIFTC
+           | integerLiteral op_MULRSHIFT_HASH -- op_MULRSHIFT_HASH
+           | integerLiteral op_MULRSHIFTR_HASH -- op_MULRSHIFTR_HASH
+           | integerLiteral op_MULRSHIFTC_HASH -- op_MULRSHIFTC_HASH
+           | op_LSHIFTDIV -- op_LSHIFTDIV
+           | op_LSHIFTDIVR -- op_LSHIFTDIVR
+           | op_LSHIFTDIVC -- op_LSHIFTDIVC
+           | integerLiteral op_LSHIFT_HASH_DIV -- op_LSHIFT_HASH_DIV
+           | integerLiteral op_LSHIFT_HASH_DIVR -- op_LSHIFT_HASH_DIVR
+           | integerLiteral op_LSHIFT_HASH_DIVC -- op_LSHIFT_HASH_DIVC
+           | integerLiteral op_LSHIFT_HASH -- op_LSHIFT_HASH
+           | integerLiteral op_RSHIFT_HASH -- op_RSHIFT_HASH
+           | op_LSHIFT -- op_LSHIFT
+           | op_RSHIFT -- op_RSHIFT
+           | op_POW2 -- op_POW2
+           | op_AND -- op_AND
+           | op_OR -- op_OR
+           | op_XOR -- op_XOR
+           | op_NOT -- op_NOT
+
+    op_NOP = ("NOP") ~idPart
+    op_SWAP = ("SWAP") ~idPart
+    op_DUP = ("DUP") ~idPart
+    op_OVER = ("OVER") ~idPart
+    op_DROP = ("DROP") ~idPart
+    op_NIP = ("NIP") ~idPart
+    op_ROT = ("ROT") ~idPart
+    op_MINUS_ROT = ("-ROT" | "ROTREV") ~idPart
+    op_2SWAP = ("2SWAP" | "SWAP2") ~idPart
+    op_2DROP = ("2DROP" | "DROP2") ~idPart
+    op_2DUP = ("2DUP" | "DUP2") ~idPart
+    op_2OVER = ("2OVER" | "OVER2") ~idPart
+    op_PICK = ("PICK" | "PUSHX") ~idPart
+    op_ROLLX = ("ROLLX") ~idPart
+    op_MINUS_ROLLX = ("-ROLLX" | "ROLLREVX") ~idPart
+    op_BLKSWX = ("BLKSWX") ~idPart
+    op_REVX = ("REVX") ~idPart
+    op_DROPX = ("DROPX") ~idPart
+    op_TUCK = ("TUCK") ~idPart
+    op_XCHGX = ("XCHGX") ~idPart
+    op_DEPTH = ("DEPTH") ~idPart
+    op_CHKDEPTH = ("CHKDEPTH") ~idPart
+    op_ONLYTOPX = ("ONLYTOPX") ~idPart
+    op_ONLYX = ("ONLYX") ~idPart
+    op_ZERO = ("ZERO" | "FALSE") ~idPart
+    op_ONE = ("ONE") ~idPart
+    op_TWO = ("TWO") ~idPart
+    op_TEN = ("TEN") ~idPart
+    op_TRUE = ("TRUE") ~idPart
+    op_PUSHINT = ("PUSHINT" | "INT") ~idPart
+    op_PUSHINTX = ("PUSHINTX" | "INTX") ~idPart
+    op_PUSHPOW2 = ("PUSHPOW2") ~idPart
+    op_PUSHNAN = ("PUSHNAN") ~idPart
+    op_PUSHPOW2DEC = ("PUSHPOW2DEC") ~idPart
+    op_PUSHNEGPOW2 = ("PUSHNEGPOW2") ~idPart
+    op_PUSHREF = ("PUSHREF") ~idPart
+    op_PUSHREFSLICE = ("PUSHREFSLICE") ~idPart
+    op_PUSHREFCONT = ("PUSHREFCONT") ~idPart
+    op_PUSHSLICE = ("PUSHSLICE" | "SLICE") ~idPart
+    op_ADD = ("ADD") ~idPart
+    op_SUB = ("SUB") ~idPart
+    op_SUBR = ("SUBR") ~idPart
+    op_NEGATE = ("NEGATE") ~idPart
+    op_INC = ("INC") ~idPart
+    op_DEC = ("DEC") ~idPart
+    op_ADDCONST = ("ADDCONST" | "ADDINT") ~idPart
+    op_SUBCONST = ("SUBCONST" | "SUBINT") ~idPart
+    op_MULCONST = ("MULCONST" | "MULINT") ~idPart
+    op_MUL = ("MUL") ~idPart
+    op_DIV = ("DIV") ~idPart
+    op_DIVR = ("DIVR") ~idPart
+    op_DIVC = ("DIVC") ~idPart
+    op_MOD = ("MOD") ~idPart
+    op_DIVMOD = ("DIVMOD") ~idPart
+    op_DIVMODR = ("DIVMODR") ~idPart
+    op_DIVMODC = ("DIVMODC") ~idPart
+    op_RSHIFTR = ("RSHIFTR") ~idPart
+    op_RSHIFTC = ("RSHIFTC") ~idPart
+    op_RSHIFTR_HASH = ("RSHIFTR#") ~idPart
+    op_RSHIFTC_HASH = ("RSHIFTC#") ~idPart
+    op_MODPOW2_HASH = ("MODPOW2#") ~idPart
+    op_MODPOW2R_HASH = ("MODPOW2R#") ~idPart
+    op_MODPOW2C_HASH = ("MODPOW2C#") ~idPart
+    op_MULDIV = ("MULDIV") ~idPart
+    op_MULDIVR = ("MULDIVR") ~idPart
+    op_MULMOD = ("MULMOD") ~idPart
+    op_MULDIVMOD = ("MULDIVMOD") ~idPart
+    op_MULDIVMODR = ("MULDIVMODR") ~idPart
+    op_MULDIVMODC = ("MULDIVMODC") ~idPart
+    op_MULRSHIFT = ("MULRSHIFT") ~idPart
+    op_MULRSHIFTR = ("MULRSHIFTR") ~idPart
+    op_MULRSHIFTC = ("MULRSHIFTC") ~idPart
+    op_MULRSHIFT_HASH = ("MULRSHIFT#") ~idPart
+    op_MULRSHIFTR_HASH = ("MULRSHIFTR#") ~idPart
+    op_MULRSHIFTC_HASH = ("MULRSHIFTC#") ~idPart
+    op_LSHIFTDIV = ("LSHIFTDIV") ~idPart
+    op_LSHIFTDIVR = ("LSHIFTDIVR") ~idPart
+    op_LSHIFTDIVC = ("LSHIFTDIVC") ~idPart
+    op_LSHIFT_HASH_DIV = ("LSHIFT#DIV") ~idPart
+    op_LSHIFT_HASH_DIVR = ("LSHIFT#DIVR") ~idPart
+    op_LSHIFT_HASH_DIVC = ("LSHIFT#DIVC") ~idPart
+    op_LSHIFT_HASH = ("LSHIFT#") ~idPart
+    op_RSHIFT_HASH = ("RSHIFT#") ~idPart
+    op_LSHIFT = ("LSHIFT") ~idPart
+    op_RSHIFT = ("RSHIFT") ~idPart
+    op_POW2 = ("POW2") ~idPart
+    op_AND = ("AND") ~idPart
+    op_OR = ("OR") ~idPart
+    op_XOR = ("XOR") ~idPart
+    op_NOT = ("NOT") ~idPart
 
     // Cell literal
-    cellLiteral = "x{" hexDigit+ "}"
+    cellLiteral = "x{" hexDigit* "}"
 
     // Integer Literal
     // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")

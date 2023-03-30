@@ -10,29 +10,26 @@ const baseGrammar = fs.readFileSync(path.resolve(__dirname, '..', 'src', 'gramma
 let rules: string[] = [];
 for (let op of opcodes.opcodes) {
     if (op.kind === 'single') {
-        rules.push(`"${op.name}"` + ' -- op_' + normalizeName(op.name));
-        for (let alias of op.aliases) {
-            rules.push(`"${alias}"` + ' -- op_' + normalizeName(alias));
-        }
+        rules.push(`op_${normalizeName(op.name)}` + ' -- op_' + normalizeName(op.name));
     }
     if (op.kind === 'int') {
-        rules.push(`integerLiteral "${op.name}"` + ' -- op_' + normalizeName(op.name));
-        for (let alias of op.aliases) {
-            rules.push(`integerLiteral "${alias}"` + ' -- op_' + normalizeName(alias));
-        }
+        rules.push(`integerLiteral op_${normalizeName(op.name)}` + ' -- op_' + normalizeName(op.name));
     }
     if (op.kind === 'ref') {
-        rules.push(`cellLiteral "${op.name}"` + ' -- op_' + normalizeName(op.name));
-        for (let alias of op.aliases) {
-            rules.push(`cellLiteral "${alias}"` + ' -- op_' + normalizeName(alias));
-        }
+        rules.push(`cellLiteral op_${normalizeName(op.name)}` + ' -- op_' + normalizeName(op.name));
     }
+}
+
+let opcodesDefs: string[] = [];
+for (let op of opcodes.opcodes) {
+    let def = [op.name, ...op.aliases].map((v) => `"${v}"`).join(' | ');
+    opcodesDefs.push(`op_${normalizeName(op.name)} = (${def}) ~idPart`);
 }
 
 // Insert rules
 const padding = 11;
-let prepared = rules.join(`\n${' '.repeat(padding)}| `);
-let grammar = baseGrammar.replace('Opcode = ""', 'Opcode = ' + prepared);
+let prepared = 'Opcode = ' + rules.join(`\n${' '.repeat(padding)}| `) + '\n\n' + opcodesDefs.map((v) => ' '.repeat(4) + v).join('\n');
+let grammar = baseGrammar.replace('Opcode = ""', prepared);
 fs.writeFileSync(path.resolve(__dirname, '..', 'src', 'grammar', 'fift.ohm'), grammar);
 
 // Create types
@@ -68,13 +65,6 @@ writer.inIndent(() => {
                     writer.append(`return { kind: 'simple', name: '${op.name}' };`);
                 });
                 writer.append(`},`);
-                for (let alias of op.aliases) {
-                    writer.append(`Opcode_op_${normalizeName(alias)}(arg0) {`);
-                    writer.inIndent(() => {
-                        writer.append(`return { kind: 'simple', name: '${op.name}' };`);
-                    });
-                    writer.append(`},`);
-                }
             }
 
             if (op.kind === 'int') {
@@ -83,13 +73,14 @@ writer.inIndent(() => {
                     writer.append(`return { kind: 'int', name: '${op.name}', arg: BigInt(arg0.sourceString) };`);
                 });
                 writer.append(`},`);
-                for (let alias of op.aliases) {
-                    writer.append(`Opcode_op_${normalizeName(alias)}(arg0, arg1) {`);
-                    writer.inIndent(() => {
-                        writer.append(`return { kind: 'int', name: '${op.name}', arg: BigInt(arg0.sourceString) };`);
-                    });
-                    writer.append(`},`);
-                }
+            }
+
+            if (op.kind === 'ref') {
+                writer.append(`Opcode_op_${normalizeName(op.name)}(arg0, arg1) {`);
+                writer.inIndent(() => {
+                    writer.append(`return { kind: 'ref', name: '${op.name}', arg: arg0.resolve_cell() };`);
+                });
+                writer.append(`},`);
             }
         }
     });

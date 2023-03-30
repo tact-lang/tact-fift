@@ -10,6 +10,13 @@ PROGRAM{
   126698 DECLMETHOD exported8
   130763 DECLMETHOD exported9
   96811 DECLMETHOD exported10
+  92682 DECLMETHOD exported11
+  88681 DECLMETHOD exported12
+  84552 DECLMETHOD exported13
+  80559 DECLMETHOD exported14
+  76430 DECLMETHOD exported15
+  72429 DECLMETHOD exported16
+  68300 DECLMETHOD exported17
   main PROC:<{
     ADD
   }>
@@ -52,5 +59,30 @@ PROGRAM{
   exported10 PROC:<{
     2DROP
     8 PUSHPOW2
+  }>
+  exported11 PROC:<{
+    2DROP
+    90596966400 PUSHINTX
+  }>
+  exported12 PROC:<{
+    2DROP
+    1024 PUSHINTX
+  }>
+  exported13 PROC:<{
+    2DROP
+    1023 PUSHINTX
+  }>
+  exported14 PROC:<{
+    2DROP
+    -1024 PUSHINTX
+  }>
+  exported15 PROC:<{
+    x{48656c6c6f2c20576f726c6421} PUSHSLICE
+  }>
+  exported16 PROC:<{
+    x{} PUSHSLICE
+  }>
+  exported17 PROC:<{
+    x{313233} PUSHSLICE
   }>
 }END>c
