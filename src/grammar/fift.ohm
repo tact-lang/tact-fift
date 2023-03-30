@@ -2,9 +2,15 @@ Fift {
     // Starting point of the program
     Program = "PROGRAM{" ProgramItem* "}END>c"
     ProgramItem = FunctionDeclaration | FunctionImplementation
-    FunctionDeclaration = "DECLPROC" id
-    FunctionImplementation = id ("PROCREF"|"PROC") ":<{" Opcode* "}>"
+    FunctionDeclaration = "DECLPROC" id --simple
+                        | integerLiteral "DECLMETHOD" id --exported
+    FunctionImplementation = id "PROC" ":<{" Instruction* "}>" --generic
+                           | id "PROCREF" ":<{" Instruction* "}>" --ref
+                           | id "PROCINLINE" ":<{" Instruction* "}>" --inline
     
+    // Instructions
+    Instruction = Opcode --opcode
+
     // Opcodes
     Opcode = "NOP" -- op_NOP
            | "SWAP" -- op_SWAP

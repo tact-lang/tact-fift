@@ -14,8 +14,15 @@ import {
 export interface FiftActionDict<T> extends BaseActionDict<T> {
   Program?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode) => T;
   ProgramItem?: (this: NonterminalNode, arg0: NonterminalNode) => T;
-  FunctionDeclaration?: (this: NonterminalNode, arg0: TerminalNode, arg1: NonterminalNode) => T;
-  FunctionImplementation?: (this: NonterminalNode, arg0: NonterminalNode, arg1: TerminalNode, arg2: TerminalNode, arg3: IterationNode, arg4: TerminalNode) => T;
+  FunctionDeclaration_simple?: (this: NonterminalNode, arg0: TerminalNode, arg1: NonterminalNode) => T;
+  FunctionDeclaration_exported?: (this: NonterminalNode, arg0: NonterminalNode, arg1: TerminalNode, arg2: NonterminalNode) => T;
+  FunctionDeclaration?: (this: NonterminalNode, arg0: NonterminalNode) => T;
+  FunctionImplementation_generic?: (this: NonterminalNode, arg0: NonterminalNode, arg1: TerminalNode, arg2: TerminalNode, arg3: IterationNode, arg4: TerminalNode) => T;
+  FunctionImplementation_ref?: (this: NonterminalNode, arg0: NonterminalNode, arg1: TerminalNode, arg2: TerminalNode, arg3: IterationNode, arg4: TerminalNode) => T;
+  FunctionImplementation_inline?: (this: NonterminalNode, arg0: NonterminalNode, arg1: TerminalNode, arg2: TerminalNode, arg3: IterationNode, arg4: TerminalNode) => T;
+  FunctionImplementation?: (this: NonterminalNode, arg0: NonterminalNode) => T;
+  Instruction_opcode?: (this: NonterminalNode, arg0: NonterminalNode) => T;
+  Instruction?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_NOP?: (this: NonterminalNode, arg0: TerminalNode) => T;
   Opcode_op_SWAP?: (this: NonterminalNode, arg0: TerminalNode) => T;
   Opcode_op_DUP?: (this: NonterminalNode, arg0: TerminalNode) => T;

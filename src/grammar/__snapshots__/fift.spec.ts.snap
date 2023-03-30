@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fift should parse empty.fc.fift 1`] = `
+{
+  "definitions": [
+    {
+      "id": null,
+      "kind": "function_declaration",
+      "name": "main",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "ADD",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "main",
+      "type": "generic",
+    },
+  ],
+}
+`;
+
+exports[`fift should parse simple.fc.fift 1`] = `
+{
+  "definitions": [
+    {
+      "id": null,
+      "kind": "function_declaration",
+      "name": "main",
+    },
+    {
+      "id": 104539,
+      "kind": "function_declaration",
+      "name": "exported",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "ADD",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "main",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "SUB",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported",
+      "type": "generic",
+    },
+  ],
+}
+`;

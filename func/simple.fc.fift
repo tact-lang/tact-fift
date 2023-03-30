@@ -1,0 +1,10 @@
+PROGRAM{
+  DECLPROC main
+  104539 DECLMETHOD exported
+  main PROC:<{
+    ADD
+  }>
+  exported PROC:<{
+    SUB
+  }>
+}END>c

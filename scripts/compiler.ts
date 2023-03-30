@@ -1,4 +1,5 @@
 import { compileContract } from 'ton-compiler';
+import { decompileAll } from '@tact-lang/opcode';
 import fs from 'fs';
 
 (async () => {
@@ -11,8 +12,10 @@ import fs from 'fs';
             }
             console.log('Processing ' + p.path + r);
             let res = await compileContract({ files: [p.path + r] })
+            let decompiled = decompileAll({ src: res.output! });
             fs.writeFileSync(p.path + r + ".fift", res.fift!);
-            // fs.writeFileSync(p.path + r + ".cell", res.output!);
+            fs.writeFileSync(p.path + r + ".rev.fift", decompiled);
+            fs.writeFileSync(p.path + r + ".boc", res.output!);
         }
     }
 })();

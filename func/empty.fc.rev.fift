@@ -1,0 +1,6 @@
+PROGRAM{
+  DECLPROC recv_internal;
+  recv_internal PROC:<{
+    ADD
+  }>
+}END>c

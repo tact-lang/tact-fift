@@ -16,6 +16,7 @@ export type DefinedOpcode = {
 export class Opcodes {
 
     opcodes: DefinedOpcode[] = [];
+    opcodeMap: Map<string, DefinedOpcode> = new Map();
 
     def(code: string, name: string) {
         const res: DefinedOpcode = {
@@ -57,6 +58,12 @@ export class Opcodes {
             also(name2: string) {
                 res.aliases.push(name2);
             }
+        }
+    }
+
+    prepare() {
+        for (const op of this.opcodes) {
+            this.opcodeMap.set(op.name, op);
         }
     }
 }
@@ -199,4 +206,5 @@ o.def('B3', 'NOT');
 // x{ B7B600 } @Defop QFITSX
 // x{ B7B601 } @Defop QUFITSX
 
+o.prepare();
 export const opcodes = o;

@@ -1,0 +1,10 @@
+PROGRAM{
+  DECLPROC recv_internal;
+  DECLPROC ?fun_104539;
+  recv_internal PROC:<{
+    ADD
+  }>
+  ?fun_104539 PROC:<{
+    SUB
+  }>
+}END>c
