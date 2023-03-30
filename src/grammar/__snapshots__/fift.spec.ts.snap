@@ -32,9 +32,54 @@ exports[`fift should parse simple.fc.fift 1`] = `
       "name": "main",
     },
     {
-      "id": 104539,
+      "id": 98243,
       "kind": "function_declaration",
-      "name": "exported",
+      "name": "exported1",
+    },
+    {
+      "id": 85920,
+      "kind": "function_declaration",
+      "name": "exported2",
+    },
+    {
+      "id": 89985,
+      "kind": "function_declaration",
+      "name": "exported3",
+    },
+    {
+      "id": 77670,
+      "kind": "function_declaration",
+      "name": "exported4",
+    },
+    {
+      "id": 81735,
+      "kind": "function_declaration",
+      "name": "exported5",
+    },
+    {
+      "id": 69412,
+      "kind": "function_declaration",
+      "name": "exported6",
+    },
+    {
+      "id": 73477,
+      "kind": "function_declaration",
+      "name": "exported7",
+    },
+    {
+      "id": 126698,
+      "kind": "function_declaration",
+      "name": "exported8",
+    },
+    {
+      "id": 130763,
+      "kind": "function_declaration",
+      "name": "exported9",
+    },
+    {
+      "id": 96811,
+      "kind": "function_declaration",
+      "name": "exported10",
     },
     {
       "instructions": [
@@ -51,11 +96,160 @@ exports[`fift should parse simple.fc.fift 1`] = `
       "instructions": [
         {
           "kind": "simple",
-          "name": "SUB",
+          "name": "2DROP",
+        },
+        {
+          "arg": 10n,
+          "kind": "int",
+          "name": "PUSHINT",
         },
       ],
       "kind": "function_implementation",
-      "name": "exported",
+      "name": "exported1",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": -3n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported2",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": 5n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported3",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": 50n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported4",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": -120n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported5",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": 32760n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported6",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": -32760n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported7",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": -3276012312312312n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported8",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": 3276012312312312n,
+          "kind": "int",
+          "name": "PUSHINT",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported9",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "2DROP",
+        },
+        {
+          "arg": 8n,
+          "kind": "int",
+          "name": "PUSHPOW2",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported10",
       "type": "generic",
     },
   ],

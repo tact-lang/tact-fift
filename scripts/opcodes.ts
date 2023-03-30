@@ -49,7 +49,7 @@ writer.inIndent(() => {
             writer.append(`| { kind: 'int', name: '${op.name}', arg: bigint }`);
         }
         if (op.kind === 'ref') {
-            writer.append(`| { kind: 'int', name: '${op.name}', arg: Cell }`);
+            writer.append(`| { kind: 'ref', name: '${op.name}', arg: Cell }`);
         }
     }
     writer.append(';');
@@ -72,6 +72,21 @@ writer.inIndent(() => {
                     writer.append(`Opcode_op_${normalizeName(alias)}(arg0) {`);
                     writer.inIndent(() => {
                         writer.append(`return { kind: 'simple', name: '${op.name}' };`);
+                    });
+                    writer.append(`},`);
+                }
+            }
+
+            if (op.kind === 'int') {
+                writer.append(`Opcode_op_${normalizeName(op.name)}(arg0, arg1) {`);
+                writer.inIndent(() => {
+                    writer.append(`return { kind: 'int', name: '${op.name}', arg: BigInt(arg0.sourceString) };`);
+                });
+                writer.append(`},`);
+                for (let alias of op.aliases) {
+                    writer.append(`Opcode_op_${normalizeName(alias)}(arg0, arg1) {`);
+                    writer.inIndent(() => {
+                        writer.append(`return { kind: 'int', name: '${op.name}', arg: BigInt(arg0.sourceString) };`);
                     });
                     writer.append(`},`);
                 }

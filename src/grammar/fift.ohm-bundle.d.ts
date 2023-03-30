@@ -117,7 +117,7 @@ export interface FiftActionDict<T> extends BaseActionDict<T> {
   Opcode?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   cellLiteral?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode) => T;
   integerLiteral?: (this: NonterminalNode, arg0: NonterminalNode) => T;
-  integerLiteralDec?: (this: NonterminalNode, arg0: IterationNode) => T;
+  integerLiteralDec?: (this: NonterminalNode, arg0: IterationNode, arg1: IterationNode) => T;
   integerLiteralHex?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode) => T;
   letterAsciiLC?: (this: NonterminalNode, arg0: TerminalNode) => T;
   letterAsciiUC?: (this: NonterminalNode, arg0: TerminalNode) => T;

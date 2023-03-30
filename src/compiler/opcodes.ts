@@ -1,3 +1,6 @@
+import { BitBuilder, BitString } from "ton-core";
+import { ContinuationBuilder } from "./builder";
+
 export type DefinedOpcode = {
     kind: 'single',
     code: string,
@@ -7,6 +10,7 @@ export type DefinedOpcode = {
     kind: 'int',
     name: string,
     aliases: string[],
+    serializer: ((src: ContinuationBuilder, arg: bigint) => void) | null,
 } | {
     kind: 'ref',
     name: string,
@@ -26,25 +30,35 @@ export class Opcodes {
             aliases: []
         };
         this.opcodes.push(res);
-        return {
+
+        let b = {
             also(name2: string) {
                 res.aliases.push(name2);
+                return b;
             }
         }
+        return b;
     }
 
     defInt(name: string) {
         const res: DefinedOpcode = {
             kind: 'int',
             name,
-            aliases: []
+            aliases: [],
+            serializer: null
         };
         this.opcodes.push(res);
-        return {
+        let b = {
             also(name2: string) {
                 res.aliases.push(name2);
+                return b;
+            },
+            serializer(f: (src: ContinuationBuilder, arg: bigint) => void) {
+                res.serializer = f;
+                return b;
             }
         }
+        return b;
     }
 
     defRef(name: string) {
@@ -64,6 +78,21 @@ export class Opcodes {
     prepare() {
         for (const op of this.opcodes) {
             this.opcodeMap.set(op.name, op);
+        }
+    }
+}
+
+//
+// Serializers
+//
+
+const serializers = {
+    '8u+1': (code: string) => {
+        return (src: ContinuationBuilder, arg: bigint) => {
+            let bits = new BitBuilder();
+            bits.writeBuffer(Buffer.from(code, 'hex'));
+            bits.writeUint(arg - 1n, 8);
+            src.store(bits.build().subbuffer(0, bits.length)!);
         }
     }
 }
@@ -104,12 +133,43 @@ o.def('71', 'ONE');
 o.def('72', 'TWO');
 o.def('7A', 'TEN');
 o.def('7F', 'TRUE');
-o.defInt('PUSHINT').also('INT');
+o.defInt('PUSHINT')
+    .also('INT')
+    .serializer((src, arg) => {
+        let bits = new BitBuilder();
+        if (-5n <= arg && arg <= 10n) {
+            bits.writeUint(0x7, 4);
+            bits.writeUint(Number(arg) & 0xf, 4);
+        } else if (-128n <= arg && arg <= 127n) {
+            bits.writeUint(0x80, 8);
+            bits.writeInt(arg, 8);
+        } else if (-32768n <= arg && arg <= 32767n) {
+            bits.writeUint(0x81, 8);
+            bits.writeInt(arg, 16);
+        } else {
+            let found = false;
+            for (let l = 0; l < 30; l++) {
+                let n = 19 + l * 8;
+                let vBits = 1n << (BigInt(n) - 1n);
+                if (-vBits <= arg && arg < vBits) {
+                    bits.writeUint(0x82, 8);
+                    bits.writeUint(l, 5);
+                    bits.writeInt(arg, n);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new Error(`Cannot encode integer ${arg}`);
+            }
+        }
+        src.store(bits.build().subbuffer(0, bits.length)!);
+    });
 o.defInt('PUSHINTX').also('INTX');
-o.defInt('PUSHPOW2');
+o.defInt('PUSHPOW2').serializer(serializers["8u+1"]('83'));
 o.def('83FF', 'PUSHNAN');
-o.defInt('PUSHPOW2DEC');
-o.defInt('PUSHNEGPOW2');
+o.defInt('PUSHPOW2DEC').serializer(serializers["8u+1"]('84'));
+o.defInt('PUSHNEGPOW2').serializer(serializers["8u+1"]('85'));
 o.defRef('PUSHREF');
 o.defRef('PUSHREFSLICE');
 o.defRef('PUSHREFCONT');

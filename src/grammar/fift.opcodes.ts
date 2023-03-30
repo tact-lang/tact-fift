@@ -36,10 +36,10 @@ export type Opcode =
     | { kind: 'simple', name: 'PUSHNAN' }
     | { kind: 'int', name: 'PUSHPOW2DEC', arg: bigint }
     | { kind: 'int', name: 'PUSHNEGPOW2', arg: bigint }
-    | { kind: 'int', name: 'PUSHREF', arg: Cell }
-    | { kind: 'int', name: 'PUSHREFSLICE', arg: Cell }
-    | { kind: 'int', name: 'PUSHREFCONT', arg: Cell }
-    | { kind: 'int', name: 'PUSHSLICE', arg: Cell }
+    | { kind: 'ref', name: 'PUSHREF', arg: Cell }
+    | { kind: 'ref', name: 'PUSHREFSLICE', arg: Cell }
+    | { kind: 'ref', name: 'PUSHREFCONT', arg: Cell }
+    | { kind: 'ref', name: 'PUSHSLICE', arg: Cell }
     | { kind: 'simple', name: 'ADD' }
     | { kind: 'simple', name: 'SUB' }
     | { kind: 'simple', name: 'SUBR' }
@@ -193,8 +193,29 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_TRUE(arg0) {
             return { kind: 'simple', name: 'TRUE' };
         },
+        Opcode_op_PUSHINT(arg0, arg1) {
+            return { kind: 'int', name: 'PUSHINT', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_INT(arg0, arg1) {
+            return { kind: 'int', name: 'PUSHINT', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_PUSHINTX(arg0, arg1) {
+            return { kind: 'int', name: 'PUSHINTX', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_INTX(arg0, arg1) {
+            return { kind: 'int', name: 'PUSHINTX', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_PUSHPOW2(arg0, arg1) {
+            return { kind: 'int', name: 'PUSHPOW2', arg: BigInt(arg0.sourceString) };
+        },
         Opcode_op_PUSHNAN(arg0) {
             return { kind: 'simple', name: 'PUSHNAN' };
+        },
+        Opcode_op_PUSHPOW2DEC(arg0, arg1) {
+            return { kind: 'int', name: 'PUSHPOW2DEC', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_PUSHNEGPOW2(arg0, arg1) {
+            return { kind: 'int', name: 'PUSHNEGPOW2', arg: BigInt(arg0.sourceString) };
         },
         Opcode_op_ADD(arg0) {
             return { kind: 'simple', name: 'ADD' };
@@ -213,6 +234,24 @@ export function registerOpcodes(semantics: FiftSemantics) {
         },
         Opcode_op_DEC(arg0) {
             return { kind: 'simple', name: 'DEC' };
+        },
+        Opcode_op_ADDCONST(arg0, arg1) {
+            return { kind: 'int', name: 'ADDCONST', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_ADDINT(arg0, arg1) {
+            return { kind: 'int', name: 'ADDCONST', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_SUBCONST(arg0, arg1) {
+            return { kind: 'int', name: 'SUBCONST', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_SUBINT(arg0, arg1) {
+            return { kind: 'int', name: 'SUBCONST', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_MULCONST(arg0, arg1) {
+            return { kind: 'int', name: 'MULCONST', arg: BigInt(arg0.sourceString) };
+        },
+        Opcode_op_MULINT(arg0, arg1) {
+            return { kind: 'int', name: 'MULCONST', arg: BigInt(arg0.sourceString) };
         },
         Opcode_op_MUL(arg0) {
             return { kind: 'simple', name: 'MUL' };

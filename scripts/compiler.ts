@@ -12,6 +12,10 @@ import fs from 'fs';
             }
             console.log('Processing ' + p.path + r);
             let res = await compileContract({ files: [p.path + r] })
+            if (!res.ok) {
+                console.log('Error: ' + res.log);
+                continue;
+            }
             let decompiled = decompileAll({ src: res.output! });
             fs.writeFileSync(p.path + r + ".fift", res.fift!);
             fs.writeFileSync(p.path + r + ".rev.fift", decompiled);

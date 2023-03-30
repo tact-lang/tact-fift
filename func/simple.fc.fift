@@ -1,10 +1,56 @@
 PROGRAM{
   DECLPROC main
-  104539 DECLMETHOD exported
+  98243 DECLMETHOD exported1
+  85920 DECLMETHOD exported2
+  89985 DECLMETHOD exported3
+  77670 DECLMETHOD exported4
+  81735 DECLMETHOD exported5
+  69412 DECLMETHOD exported6
+  73477 DECLMETHOD exported7
+  126698 DECLMETHOD exported8
+  130763 DECLMETHOD exported9
+  96811 DECLMETHOD exported10
   main PROC:<{
     ADD
   }>
-  exported PROC:<{
-    SUB
+  exported1 PROC:<{
+    2DROP
+    10 PUSHINT
+  }>
+  exported2 PROC:<{
+    2DROP
+    -3 PUSHINT
+  }>
+  exported3 PROC:<{
+    2DROP
+    5 PUSHINT
+  }>
+  exported4 PROC:<{
+    2DROP
+    50 PUSHINT
+  }>
+  exported5 PROC:<{
+    2DROP
+    -120 PUSHINT
+  }>
+  exported6 PROC:<{
+    2DROP
+    32760 PUSHINT
+  }>
+  exported7 PROC:<{
+    2DROP
+    -32760 PUSHINT
+  }>
+  exported8 PROC:<{
+    2DROP
+    -3276012312312312 PUSHINT
+  }>
+  exported9 PROC:<{
+    2DROP
+    3276012312312312 PUSHINT
+  }>
+  exported10 PROC:<{
+    2DROP
+    8 PUSHPOW2
   }>
 }END>c

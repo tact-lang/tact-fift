@@ -111,7 +111,7 @@ Fift {
     // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")
     // digit defined in Ohm's built-in rules (otherwise: digit = "0".."9")
     integerLiteral = integerLiteralHex | integerLiteralDec // Order is important
-    integerLiteralDec = digit+
+    integerLiteralDec = # "-"? digit+ 
     integerLiteralHex = "0x" hexDigit+
                       | "0X" hexDigit+
 

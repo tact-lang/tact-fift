@@ -1,10 +1,56 @@
 PROGRAM{
   DECLPROC recv_internal;
-  DECLPROC ?fun_104539;
+  DECLPROC ?fun_69412;
+  DECLPROC ?fun_73477;
+  DECLPROC ?fun_77670;
+  DECLPROC ?fun_81735;
+  DECLPROC ?fun_85920;
+  DECLPROC ?fun_89985;
+  DECLPROC ?fun_96811;
+  DECLPROC ?fun_98243;
+  DECLPROC ?fun_126698;
+  DECLPROC ?fun_130763;
   recv_internal PROC:<{
     ADD
   }>
-  ?fun_104539 PROC:<{
-    SUB
+  ?fun_69412 PROC:<{
+    DROP2
+    32760 PUSHINT
+  }>
+  ?fun_73477 PROC:<{
+    DROP2
+    -32760 PUSHINT
+  }>
+  ?fun_77670 PROC:<{
+    DROP2
+    50 PUSHINT
+  }>
+  ?fun_81735 PROC:<{
+    DROP2
+    -120 PUSHINT
+  }>
+  ?fun_85920 PROC:<{
+    DROP2
+    -3 PUSHINT
+  }>
+  ?fun_89985 PROC:<{
+    DROP2
+    5 PUSHINT
+  }>
+  ?fun_96811 PROC:<{
+    DROP2
+    8 PUSHPOW2
+  }>
+  ?fun_98243 PROC:<{
+    DROP2
+    10 PUSHINT
+  }>
+  ?fun_126698 PROC:<{
+    DROP2
+    -3276012312312312 PUSHINT
+  }>
+  ?fun_130763 PROC:<{
+    DROP2
+    3276012312312312 PUSHINT
   }>
 }END>c

@@ -1,5 +1,6 @@
 import { beginCell, Builder, Cell, Dictionary, DictionaryValue } from "ton-core";
 import { FunctionDeclaration, FunctionImplementation, Instruction, Program } from "../grammar/fift";
+import { ContinuationBuilder } from "./builder";
 import { opcodes } from "./opcodes";
 
 export function compile(source: Program): Cell {
@@ -45,8 +46,9 @@ export function compile(source: Program): Cell {
         }
         let builder = beginCell();
         builder.storeUint(0, PADDING_ZERO_BITS);
-        compileBody(builder, impl.instructions);
-        dict.set(resolvedId, builder.endCell());
+        let continuationBuilder = new ContinuationBuilder(builder);
+        compileBody(continuationBuilder, impl.instructions);
+        dict.set(resolvedId, continuationBuilder.complete());
     }
 
     // Serialize dict
@@ -64,7 +66,7 @@ export function compile(source: Program): Cell {
     return builder.endCell()
 }
 
-function compileBody(builder: Builder, instructions: Instruction[]) {
+function compileBody(builder: ContinuationBuilder, instructions: Instruction[]) {
     for (let inst of instructions) {
 
         // Store simple opcode
@@ -73,12 +75,25 @@ function compileBody(builder: Builder, instructions: Instruction[]) {
             if (!v || v.kind !== 'single') {
                 throw Error(`Unknown opcode: ${inst.name}`);
             }
-            let bytes = Buffer.from(v.code, 'hex');
-            builder.storeBuffer(bytes);
+            builder.store(Buffer.from(v.code, 'hex'));
             continue;
         }
 
         // Store opcode with int argument
+        if (inst.kind === 'int') {
+            let v = opcodes.opcodeMap.get(inst.name);
+            if (!v || v.kind !== 'int') {
+                throw Error(`Unknown opcode: ${inst.name}`);
+            }
+            if (!v.serializer) {
+                throw Error(`Opcode does not have serializer: ${inst.name}`);
+            }
+            v.serializer(builder, inst.arg);
+            continue;
+        }
+
+        // Unhandled instruction
+        throw Error(`Unhandled instruction: ${inst.kind}`);
     }
 }
 
