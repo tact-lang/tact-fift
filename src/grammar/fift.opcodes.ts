@@ -25,6 +25,8 @@ export type Opcode =
     | { kind: 'simple', name: 'CHKDEPTH' }
     | { kind: 'simple', name: 'ONLYTOPX' }
     | { kind: 'simple', name: 'ONLYX' }
+    | { kind: 'simple', name: 'NULL' }
+    | { kind: 'simple', name: 'ISNULL' }
     | { kind: 'simple', name: 'ZERO' }
     | { kind: 'simple', name: 'ONE' }
     | { kind: 'simple', name: 'TWO' }
@@ -40,6 +42,7 @@ export type Opcode =
     | { kind: 'ref', name: 'PUSHREFSLICE', arg: Cell }
     | { kind: 'ref', name: 'PUSHREFCONT', arg: Cell }
     | { kind: 'ref', name: 'PUSHSLICE', arg: Cell }
+    | { kind: 'ref', name: 'PUSHCONT', arg: Cell }
     | { kind: 'simple', name: 'ADD' }
     | { kind: 'simple', name: 'SUB' }
     | { kind: 'simple', name: 'SUBR' }
@@ -167,6 +170,12 @@ export function registerOpcodes(semantics: FiftSemantics) {
         Opcode_op_ONLYX(arg0) {
             return { kind: 'simple', name: 'ONLYX' };
         },
+        Opcode_op_NULL(arg0) {
+            return { kind: 'simple', name: 'NULL' };
+        },
+        Opcode_op_ISNULL(arg0) {
+            return { kind: 'simple', name: 'ISNULL' };
+        },
         Opcode_op_ZERO(arg0) {
             return { kind: 'simple', name: 'ZERO' };
         },
@@ -211,6 +220,9 @@ export function registerOpcodes(semantics: FiftSemantics) {
         },
         Opcode_op_PUSHSLICE(arg0, arg1) {
             return { kind: 'ref', name: 'PUSHSLICE', arg: arg0.resolve_cell() };
+        },
+        Opcode_op_PUSHCONT(arg0, arg1) {
+            return { kind: 'ref', name: 'PUSHCONT', arg: arg0.resolve_cell() };
         },
         Opcode_op_ADD(arg0) {
             return { kind: 'simple', name: 'ADD' };

@@ -21,7 +21,19 @@ export type FunctionImplementation = {
     instructions: Instruction[]
 }
 
-export type Instruction = Opcode;
+export type Instruction =
+    | Opcode
+    | InstructionIF
+    ;
+
+type InstructionIF = {
+    kind: 'ifjmp' | 'ifnotjmp',
+    instructions: Instruction[]
+} | {
+    kind: 'if' | 'ifnot',
+    instructions: Instruction[],
+    elseInstructions: (Instruction[]) | null
+}
 
 //
 // Semantics
@@ -66,6 +78,49 @@ semantics.addOperation<Instruction>('resolve_instruction', {
     Instruction_opcode(arg0) {
         return arg0.resolve_opcode();
     },
+    // Instruction_instruction_if(arg0) {
+    //     return arg0.resolve_instruction();
+    // },
+    Instruction_if_ifjmp(arg0, arg1, arg2) {
+        return {
+            kind: 'ifjmp',
+            instructions: arg1.children.map((v) => v.resolve_instruction())
+        };
+    },
+    Instruction_if_ifnotjmp(arg0, arg1, arg2) {
+        return {
+            kind: 'ifnotjmp',
+            instructions: arg1.children.map((v) => v.resolve_instruction())
+        };
+    },
+    Instruction_if_if(arg0, arg1, arg2) {
+        return {
+            kind: 'if',
+            instructions: arg1.children.map((v) => v.resolve_instruction()),
+            elseInstructions: null
+        };
+    },
+    Instruction_if_ifnot(arg0, arg1, arg2) {
+        return {
+            kind: 'ifnot',
+            instructions: arg1.children.map((v) => v.resolve_instruction()),
+            elseInstructions: null
+        };
+    },
+    Instruction_if_ifelse(arg0, arg1, arg2, arg3, arg4) {
+        return {
+            kind: 'if',
+            instructions: arg1.children.map((v) => v.resolve_instruction()),
+            elseInstructions: arg3.children.map((v) => v.resolve_instruction())
+        };
+    },
+    Instruction_if_ifnotelse(arg0, arg1, arg2, arg3, arg4) {
+        return {
+            kind: 'ifnot',
+            instructions: arg1.children.map((v) => v.resolve_instruction()),
+            elseInstructions: arg3.children.map((v) => v.resolve_instruction())
+        };
+    }
 });
 
 semantics.addOperation<Cell>('resolve_cell', {

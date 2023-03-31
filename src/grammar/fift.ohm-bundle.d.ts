@@ -23,6 +23,13 @@ export interface FiftActionDict<T> extends BaseActionDict<T> {
   FunctionImplementation?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Instruction_opcode?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Instruction?: (this: NonterminalNode, arg0: NonterminalNode) => T;
+  Instruction_if_ifjmp?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode) => T;
+  Instruction_if_ifnotjmp?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode) => T;
+  Instruction_if_ifelse?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode, arg3: IterationNode, arg4: TerminalNode) => T;
+  Instruction_if_ifnotelse?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode, arg3: IterationNode, arg4: TerminalNode) => T;
+  Instruction_if_if?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode) => T;
+  Instruction_if_ifnot?: (this: NonterminalNode, arg0: TerminalNode, arg1: IterationNode, arg2: TerminalNode) => T;
+  Instruction_if?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_NOP?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_SWAP?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_DUP?: (this: NonterminalNode, arg0: NonterminalNode) => T;
@@ -47,6 +54,8 @@ export interface FiftActionDict<T> extends BaseActionDict<T> {
   Opcode_op_CHKDEPTH?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_ONLYTOPX?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_ONLYX?: (this: NonterminalNode, arg0: NonterminalNode) => T;
+  Opcode_op_NULL?: (this: NonterminalNode, arg0: NonterminalNode) => T;
+  Opcode_op_ISNULL?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_ZERO?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_ONE?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_TWO?: (this: NonterminalNode, arg0: NonterminalNode) => T;
@@ -62,6 +71,7 @@ export interface FiftActionDict<T> extends BaseActionDict<T> {
   Opcode_op_PUSHREFSLICE?: (this: NonterminalNode, arg0: NonterminalNode, arg1: NonterminalNode) => T;
   Opcode_op_PUSHREFCONT?: (this: NonterminalNode, arg0: NonterminalNode, arg1: NonterminalNode) => T;
   Opcode_op_PUSHSLICE?: (this: NonterminalNode, arg0: NonterminalNode, arg1: NonterminalNode) => T;
+  Opcode_op_PUSHCONT?: (this: NonterminalNode, arg0: NonterminalNode, arg1: NonterminalNode) => T;
   Opcode_op_ADD?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_SUB?: (this: NonterminalNode, arg0: NonterminalNode) => T;
   Opcode_op_SUBR?: (this: NonterminalNode, arg0: NonterminalNode) => T;
@@ -138,6 +148,8 @@ export interface FiftActionDict<T> extends BaseActionDict<T> {
   op_CHKDEPTH?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_ONLYTOPX?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_ONLYX?: (this: NonterminalNode, arg0: TerminalNode) => T;
+  op_NULL?: (this: NonterminalNode, arg0: TerminalNode) => T;
+  op_ISNULL?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_ZERO?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_ONE?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_TWO?: (this: NonterminalNode, arg0: TerminalNode) => T;
@@ -153,6 +165,7 @@ export interface FiftActionDict<T> extends BaseActionDict<T> {
   op_PUSHREFSLICE?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_PUSHREFCONT?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_PUSHSLICE?: (this: NonterminalNode, arg0: TerminalNode) => T;
+  op_PUSHCONT?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_ADD?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_SUB?: (this: NonterminalNode, arg0: TerminalNode) => T;
   op_SUBR?: (this: NonterminalNode, arg0: TerminalNode) => T;

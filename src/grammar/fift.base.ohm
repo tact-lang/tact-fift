@@ -10,6 +10,15 @@ Fift {
     
     // Instructions
     Instruction = Opcode --opcode
+                | Instruction_if
+
+    // Conditionals
+    Instruction_if = "IFJMP:<{" Instruction* "}>" --ifjmp
+                   | "IFNOTJMP:<{" Instruction* "}>" --ifnotjmp
+                   | "IF:<{" Instruction* "}>ELSE<{" Instruction* "}>" --ifelse
+                   | "IFNOT:<{" Instruction* "}>ELSE<{" Instruction* "}>" --ifnotelse
+                   | "IF:<{" Instruction* "}>" --if
+                   | "IFNOT:<{" Instruction* "}>" --ifnot
 
     // Opcodes
     Opcode = ""

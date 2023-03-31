@@ -23,6 +23,235 @@ exports[`fift should parse empty.fc.fift 1`] = `
 }
 `;
 
+exports[`fift should parse if.fc.fift 1`] = `
+{
+  "definitions": [
+    {
+      "id": null,
+      "kind": "function_declaration",
+      "name": "main",
+    },
+    {
+      "id": 98243,
+      "kind": "function_declaration",
+      "name": "exported1",
+    },
+    {
+      "id": 85920,
+      "kind": "function_declaration",
+      "name": "exported2",
+    },
+    {
+      "id": 89985,
+      "kind": "function_declaration",
+      "name": "exported3",
+    },
+    {
+      "id": 77670,
+      "kind": "function_declaration",
+      "name": "exported4",
+    },
+    {
+      "id": 81735,
+      "kind": "function_declaration",
+      "name": "exported5",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "OVER",
+        },
+        {
+          "instructions": [
+            {
+              "kind": "simple",
+              "name": "DROP",
+            },
+          ],
+          "kind": "ifjmp",
+        },
+        {
+          "kind": "simple",
+          "name": "NIP",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "main",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "OVER",
+        },
+        {
+          "instructions": [
+            {
+              "kind": "simple",
+              "name": "DROP",
+            },
+            {
+              "arg": 1231231231231231232n,
+              "kind": "int",
+              "name": "PUSHINT",
+            },
+            {
+              "kind": "simple",
+              "name": "MUL",
+            },
+            {
+              "arg": 12n,
+              "kind": "int",
+              "name": "RSHIFT#",
+            },
+            {
+              "arg": 1231231231231231232n,
+              "kind": "int",
+              "name": "PUSHINT",
+            },
+            {
+              "kind": "simple",
+              "name": "DIV",
+            },
+          ],
+          "kind": "ifjmp",
+        },
+        {
+          "kind": "simple",
+          "name": "NIP",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported1",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "OVER",
+        },
+        {
+          "kind": "simple",
+          "name": "ISNULL",
+        },
+        {
+          "elseInstructions": [
+            {
+              "kind": "simple",
+              "name": "NIP",
+            },
+          ],
+          "instructions": [
+            {
+              "kind": "simple",
+              "name": "DROP",
+            },
+          ],
+          "kind": "if",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported2",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "OVER",
+        },
+        {
+          "kind": "simple",
+          "name": "ISNULL",
+        },
+        {
+          "kind": "simple",
+          "name": "NOT",
+        },
+        {
+          "elseInstructions": [
+            {
+              "kind": "simple",
+              "name": "NIP",
+            },
+          ],
+          "instructions": [
+            {
+              "kind": "simple",
+              "name": "DROP",
+            },
+          ],
+          "kind": "if",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported3",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "OVER",
+        },
+        {
+          "elseInstructions": [
+            {
+              "kind": "simple",
+              "name": "ADD",
+            },
+          ],
+          "instructions": [
+            {
+              "kind": "simple",
+              "name": "DROP",
+            },
+            {
+              "arg": 10n,
+              "kind": "int",
+              "name": "MULCONST",
+            },
+          ],
+          "kind": "if",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported4",
+      "type": "generic",
+    },
+    {
+      "instructions": [
+        {
+          "kind": "simple",
+          "name": "OVER",
+        },
+        {
+          "elseInstructions": [
+            {
+              "kind": "simple",
+              "name": "DROP",
+            },
+          ],
+          "instructions": [
+            {
+              "kind": "simple",
+              "name": "ADD",
+            },
+          ],
+          "kind": "ifnot",
+        },
+      ],
+      "kind": "function_implementation",
+      "name": "exported5",
+      "type": "generic",
+    },
+  ],
+}
+`;
+
 exports[`fift should parse simple.fc.fift 1`] = `
 {
   "definitions": [

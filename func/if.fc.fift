@@ -1,0 +1,63 @@
+PROGRAM{
+  DECLPROC main
+  98243 DECLMETHOD exported1
+  85920 DECLMETHOD exported2
+  89985 DECLMETHOD exported3
+  77670 DECLMETHOD exported4
+  81735 DECLMETHOD exported5
+  main PROC:<{
+    OVER
+    IFJMP:<{
+      DROP
+    }>
+    NIP
+  }>
+  exported1 PROC:<{
+    OVER
+    IFJMP:<{
+      DROP
+      1231231231231231232 PUSHINT
+      MUL
+      12 RSHIFT#
+      1231231231231231232 PUSHINT
+      DIV
+    }>
+    NIP
+  }>
+  exported2 PROC:<{
+    OVER
+    ISNULL
+    IF:<{
+      DROP
+    }>ELSE<{
+      NIP
+    }>
+  }>
+  exported3 PROC:<{
+    OVER
+    ISNULL
+    NOT
+    IF:<{
+      DROP
+    }>ELSE<{
+      NIP
+    }>
+  }>
+  exported4 PROC:<{
+    OVER
+    IF:<{
+      DROP
+      10 MULCONST
+    }>ELSE<{
+      ADD
+    }>
+  }>
+  exported5 PROC:<{
+    OVER
+    IFNOT:<{
+      ADD
+    }>ELSE<{
+      DROP
+    }>
+  }>
+}END>c

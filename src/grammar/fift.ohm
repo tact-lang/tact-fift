@@ -10,6 +10,15 @@ Fift {
     
     // Instructions
     Instruction = Opcode --opcode
+                | Instruction_if
+
+    // Conditionals
+    Instruction_if = "IFJMP:<{" Instruction* "}>" --ifjmp
+                   | "IFNOTJMP:<{" Instruction* "}>" --ifnotjmp
+                   | "IF:<{" Instruction* "}>ELSE<{" Instruction* "}>" --ifelse
+                   | "IFNOT:<{" Instruction* "}>ELSE<{" Instruction* "}>" --ifnotelse
+                   | "IF:<{" Instruction* "}>" --if
+                   | "IFNOT:<{" Instruction* "}>" --ifnot
 
     // Opcodes
     Opcode = op_NOP -- op_NOP
@@ -36,6 +45,8 @@ Fift {
            | op_CHKDEPTH -- op_CHKDEPTH
            | op_ONLYTOPX -- op_ONLYTOPX
            | op_ONLYX -- op_ONLYX
+           | op_NULL -- op_NULL
+           | op_ISNULL -- op_ISNULL
            | op_ZERO -- op_ZERO
            | op_ONE -- op_ONE
            | op_TWO -- op_TWO
@@ -51,6 +62,7 @@ Fift {
            | cellLiteral op_PUSHREFSLICE -- op_PUSHREFSLICE
            | cellLiteral op_PUSHREFCONT -- op_PUSHREFCONT
            | cellLiteral op_PUSHSLICE -- op_PUSHSLICE
+           | cellLiteral op_PUSHCONT -- op_PUSHCONT
            | op_ADD -- op_ADD
            | op_SUB -- op_SUB
            | op_SUBR -- op_SUBR
@@ -127,6 +139,8 @@ Fift {
     op_CHKDEPTH = ("CHKDEPTH") ~idPart
     op_ONLYTOPX = ("ONLYTOPX") ~idPart
     op_ONLYX = ("ONLYX") ~idPart
+    op_NULL = ("NULL" | "PUSHNULL") ~idPart
+    op_ISNULL = ("ISNULL") ~idPart
     op_ZERO = ("ZERO" | "FALSE") ~idPart
     op_ONE = ("ONE") ~idPart
     op_TWO = ("TWO") ~idPart
@@ -142,6 +156,7 @@ Fift {
     op_PUSHREFSLICE = ("PUSHREFSLICE") ~idPart
     op_PUSHREFCONT = ("PUSHREFCONT") ~idPart
     op_PUSHSLICE = ("PUSHSLICE" | "SLICE") ~idPart
+    op_PUSHCONT = ("PUSHCONT" | "CONT") ~idPart
     op_ADD = ("ADD") ~idPart
     op_SUB = ("SUB") ~idPart
     op_SUBR = ("SUBR") ~idPart

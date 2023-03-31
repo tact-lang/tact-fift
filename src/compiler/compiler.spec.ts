@@ -14,7 +14,7 @@ describe('compiler', () => {
                 let c = fs.readFileSync(path.resolve(root, r), 'utf8');
                 let parsed = parse(c);
                 let compiled = compile(parsed);
-                expect(golden.toString()).toBe(compiled.toString());
+                expect(compiled.toString()).toBe(golden.toString());
             });
         }
     }

@@ -1,7 +1,7 @@
 import { beginCell, Builder, Cell, Dictionary, DictionaryValue } from "ton-core";
 import { FunctionDeclaration, FunctionImplementation, Instruction, Program } from "../grammar/fift";
 import { ContinuationBuilder } from "./builder";
-import { opcodes } from "./opcodes";
+import { opcodes, serializers } from "./opcodes";
 
 export function compile(source: Program): Cell {
 
@@ -102,6 +102,48 @@ function compileBody(builder: ContinuationBuilder, instructions: Instruction[]) 
                 throw Error(`Opcode does not have serializer: ${inst.name}`);
             }
             v.serializer(builder, inst.arg);
+            continue;
+        }
+
+        // Process ifjmp
+        if (inst.kind === 'ifjmp' || inst.kind === 'ifnotjmp') {
+
+            // Compile body
+            let continuationBuilder = new ContinuationBuilder(beginCell());
+            compileBody(continuationBuilder, inst.instructions);
+            let continuation = continuationBuilder.complete();
+
+            // Store opcode
+            serializers.pushcont(builder, continuation);
+            builder.store(Buffer.from(inst.kind === 'ifjmp' ? 'E0' : 'E1', 'hex'));
+            continue;
+        }
+
+        // Process if
+        if (inst.kind === 'if' || inst.kind === 'ifnot') {
+
+            // Compile body
+            let continuationBuilder = new ContinuationBuilder(beginCell());
+            compileBody(continuationBuilder, inst.instructions);
+            let continuation = continuationBuilder.complete();
+
+            // Store opcode
+            if (inst.elseInstructions !== null) {
+                let continuationBuilder = new ContinuationBuilder(beginCell());
+                compileBody(continuationBuilder, inst.elseInstructions);
+                let continuationElse = continuationBuilder.complete();
+                if (inst.kind === 'if') {
+                    serializers.pushcont(builder, continuation);
+                    serializers.pushcont(builder, continuationElse);
+                } else {
+                    serializers.pushcont(builder, continuationElse);
+                    serializers.pushcont(builder, continuation);
+                }
+                builder.store(Buffer.from('E2', 'hex'));
+            } else {
+                serializers.pushcont(builder, continuation);
+                builder.store(Buffer.from(inst.kind === 'if' ? 'DE' : 'DF', 'hex'));
+            }
             continue;
         }
 

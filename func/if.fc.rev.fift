@@ -1,0 +1,73 @@
+PROGRAM{
+  DECLPROC recv_internal;
+  DECLPROC ?fun_77670;
+  DECLPROC ?fun_81735;
+  DECLPROC ?fun_85920;
+  DECLPROC ?fun_89985;
+  DECLPROC ?fun_98243;
+  recv_internal PROC:<{
+    s1 PUSH
+    <{
+      s0 POP
+    }> PUSHCONT
+    IFJMP
+    s1 POP
+  }>
+  ?fun_77670 PROC:<{
+    s1 PUSH
+    <{
+      s0 POP
+      10 MULCONST
+    }> PUSHCONT
+    <{
+      ADD
+    }> PUSHCONT
+    IFELSE
+  }>
+  ?fun_81735 PROC:<{
+    s1 PUSH
+    <{
+      s0 POP
+    }> PUSHCONT
+    <{
+      ADD
+    }> PUSHCONT
+    IFELSE
+  }>
+  ?fun_85920 PROC:<{
+    s1 PUSH
+    ISNULL
+    <{
+      s0 POP
+    }> PUSHCONT
+    <{
+      s1 POP
+    }> PUSHCONT
+    IFELSE
+  }>
+  ?fun_89985 PROC:<{
+    s1 PUSH
+    ISNULL
+    NOT
+    <{
+      s0 POP
+    }> PUSHCONT
+    <{
+      s1 POP
+    }> PUSHCONT
+    IFELSE
+  }>
+  ?fun_98243 PROC:<{
+    s1 PUSH
+    <{
+      s0 POP
+      1231231231231231232 PUSHINT
+      MUL
+      12 RSHIFT
+      1231231231231231232 PUSHINT
+      false 0 false 1 0 DIV
+    }> PUSHCONT
+    IFJMP
+    s1 POP
+  }>
+}END>c

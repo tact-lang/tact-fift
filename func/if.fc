@@ -1,0 +1,44 @@
+int main(int a, int b) impure {
+    if (a) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+int exported1(int a, int b) method_id {
+    if (a) {
+        int c = a * 1231231231231231232;
+        c = c >> 12;
+        c /= 1231231231231231232;
+        return c;
+    } else {
+        return b;
+    }
+}
+
+int exported2(int a, int b) method_id {
+    return null?(a) ? a : b;
+} 
+
+int exported3(int a, int b) method_id {
+    return ~ null?(a) ? a : b;
+} 
+
+int exported4(int a, int b) method_id {
+    int c = a;
+    ifnot (a) {
+        c = c + b;
+    } else {
+        c = c * 10;
+    }
+    return c;
+} 
+
+int exported5(int a, int b) method_id {
+    int c = a;
+    ifnot (a) {
+        c = c + b;
+    }
+    return c;
+} 
