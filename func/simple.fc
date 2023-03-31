@@ -73,3 +73,7 @@ slice exported16() method_id {
 slice exported17() method_id {
     return "123";
 }
+
+slice exported18() method_id {
+    return "123123123123123123123123123123123123123123123";
+}

@@ -248,8 +248,8 @@ o.defRef('PUSHSLICE')
             return;
         }
 
-        // If bitstring
-        if (arg.refs.length === 0) {
+        // PUSHSLICE(0x8B)
+        if (arg.refs.length === 0 && arg.bits.length <= 123) {
             let bits = new BitBuilder();
             bits.writeUint(0x8B, 8); // PUSHSLICE
             let l = Math.ceil((arg.bits.length - 4) / 8);
@@ -269,7 +269,46 @@ o.defRef('PUSHSLICE')
             return;
         }
 
-        throw Error('Not implemented');
+        // PUSHSLICE(0x8C)
+        if (arg.refs.length > 1 && arg.bits.length <= 123) { // What to do for 4 refs?
+            let bits = new BitBuilder();
+            bits.writeUint(0x8C, 8); // PUSHSLICE
+            bits.writeUint(arg.refs.length - 1, 2);
+            let l = Math.ceil((arg.bits.length - 1) / 8);
+            let n = l * 8 + 1;
+            bits.writeUint(l, 5);
+            bits.writeBits(arg.bits);
+            let i = arg.bits.length;
+            if (i < n) {
+                bits.writeBit(true);
+                i++;
+            }
+            while (i < n) {
+                bits.writeBit(false);
+                i++
+            }
+            src.store(bits.build().subbuffer(0, bits.length)!, arg.refs);
+            return;
+        }
+
+        // PUSHSLICE(0x8D)
+        let bits = new BitBuilder();
+        bits.writeUint(0x8D, 8); // PUSHSLICE
+        bits.writeUint(arg.refs.length, 3);
+        let l = Math.ceil((arg.bits.length - 6) / 8);
+        let n = l * 8 + 6;
+        bits.writeUint(l, 7);
+        bits.writeBits(arg.bits);
+        let i = arg.bits.length;
+        if (i < n) {
+            bits.writeBit(true);
+            i++;
+        }
+        while (i < n) {
+            bits.writeBit(false);
+            i++
+        }
+        src.store(bits.build().subbuffer(0, bits.length)!, arg.refs);
     });
 
 // Arithmetic

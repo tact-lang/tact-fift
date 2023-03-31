@@ -1,6 +1,7 @@
 import { compileContract } from 'ton-compiler';
 import { decompileAll } from '@tact-lang/opcode';
 import fs from 'fs';
+import { Cell } from 'ton-core';
 
 (async () => {
 
@@ -20,6 +21,7 @@ import fs from 'fs';
             fs.writeFileSync(p.path + r + ".fift", res.fift!);
             fs.writeFileSync(p.path + r + ".rev.fift", decompiled);
             fs.writeFileSync(p.path + r + ".boc", res.output!);
+            fs.writeFileSync(p.path + r + ".cell", Cell.fromBoc(res.output)[0].toString());
         }
     }
 })();
